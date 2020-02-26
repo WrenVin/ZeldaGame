@@ -34,21 +34,17 @@ class Player(pg.sprite.Sprite):
         self.vx, self.vy = 0, 0
         keys = pg.key.get_pressed()
         if keys[pg.K_LEFT] or keys[pg.K_a]:
-            self.rot = 180
             self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_LEFT)
-            self.vx = -300
+            self.vx = -200
         if keys[pg.K_RIGHT] or keys[pg.K_d]:
-            self.rot = 360
             self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_RIGHT)
-            self.vx = 300
+            self.vx = 200
         if keys[pg.K_UP] or keys[pg.K_w]:
-            self.rot = 90
             self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_UP)
-            self.vy = -300
+            self.vy = -200
         if keys[pg.K_DOWN] or keys[pg.K_s]:
-            self.rot = 270
             self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_NORMAL)
-            self.vy = 300
+            self.vy = 200
         if self.vx != 0 and self.vy != 0:
             self.vx *= 0.7071
             self.vy *= 0.7071
