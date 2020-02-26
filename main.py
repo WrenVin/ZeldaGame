@@ -25,16 +25,20 @@ class Game:
         self.worldspritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETWORLD))
         self.player_img = self.playerspritesheet.get_image(*PLAYER_IMG_NORMAL)
         self.wall_img = self.worldspritesheet.get_image(*BORDER)
+        self.grass = pg.image.load((path.join(img_folder, 'grass.png')))
 
     def new(self):
         # initialize all variables and do all the setup for a new game
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
-        self.player = Player(self, 2, 2)
+        self.ground = pg.sprite.Group()
         for row, tiles in enumerate(self.map.data):
             for col, tile in enumerate(tiles.strip()):
-                if tile == '1':
+                if tile == '.':
+                    Ground(self, col, row)
+                elif tile == '1':
                     Wall(self, col, row)
+        self.player = Player(self, 2, 2)
         self.camera = Camera(self.map.width, self.map.height)
     def run(self):
         # game loop - set self.playing = False to end the game
@@ -51,7 +55,7 @@ class Game:
 
     def update(self):
         # update portion of the game loop
-        self.all_sprites.update()
+        self.player.update()
         self.camera.update(self.player)
     def draw_grid(self):
         for x in range(0, WIDTH, TILESIZE):
@@ -61,7 +65,8 @@ class Game:
 
     def draw(self):
         self.screen.fill(BGCOLOR)
-        #self.draw_grid()
+        #self.img = self.grass
+        self.draw_grid()
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
         pg.display.flip()
