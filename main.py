@@ -20,7 +20,7 @@ class Game:
         game_folder = path.dirname(__file__)
         img_folder = path.join(game_folder, 'img')
 
-        self.map = Map(path.join(game_folder, 'map.txt'))
+        self.map = Map(path.join(game_folder, GAMEMAP))
         self.playerspritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETPLAYER))
         self.worldspritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETWORLD))
         self.player_img = self.playerspritesheet.get_image(*PLAYER_IMG_NORMAL)
@@ -34,11 +34,11 @@ class Game:
         self.ground = pg.sprite.Group()
         for row, tiles in enumerate(self.map.data):
             for col, tile in enumerate(tiles.strip()):
-                if tile == '.':
-                    Ground(self, col, row)
-                elif tile == '1':
+                if tile == '+' or tile == '-' or tile == '|':
                     Wall(self, col, row)
-        self.player = Player(self, 2, 2)
+                elif tile == ' ':
+                    Ground(self, col, row)
+        self.player = Player(self, 1, 1)
         self.camera = Camera(self.map.width, self.map.height)
     def run(self):
         # game loop - set self.playing = False to end the game

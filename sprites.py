@@ -11,7 +11,7 @@ class SpriteSheet:
         #Gets image off sprite sheet
         image = pg.Surface((width, height))
         image.blit(self.spritesheet, (0,0), (x, y, width, height))
-        image = pg.transform.scale(image, (width*2, height*2))
+        image = pg.transform.scale(image, ((width*2, height*2)))
         image.set_colorkey((BLACK))
         return image
     
@@ -90,7 +90,7 @@ class Wall(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.image = game.wall_img
-        self.image = pg.transform.scale(self.image, (41, 40))
+        self.image = pg.transform.scale(self.image, (TILESIZE, TILESIZE))
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y
@@ -103,7 +103,7 @@ class Ground(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.image = self.game.grass
-        self.image = pg.transform.scale(self.image, (41, 40))
+        self.image = pg.transform.scale(self.image, (TILESIZE, TILESIZE))
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y
