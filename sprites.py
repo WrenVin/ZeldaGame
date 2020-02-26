@@ -2,12 +2,27 @@ import pygame as pg
 vec = pg.math.Vector2
 from settings import *
 
+class SpriteSheet:
+    #Utility for loading and parsing spritesheets
+    def __init__(self, filename):
+        self.spritesheet = pg.image.load(filename).convert()
+        
+    def get_image(self, x, y, width, height):
+        #Gets image off sprite sheet
+        image = pg.Surface((width, height))
+        image.blit(self.spritesheet, (0,0), (x, y, width, height))
+        image = pg.transform.scale(image, (width*2, height*2))
+        image.set_colorkey((BLACK))
+        return image
+    
 class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y):
+        self.game = game
         self.groups = game.all_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.image = game.player_img
+        #self.image.set_colorkey((BLACK))
         self.rect = self.image.get_rect()
         self.vel = vec(0, 0)
         self.pos = vec(x, y) * TILESIZE
@@ -20,15 +35,19 @@ class Player(pg.sprite.Sprite):
         keys = pg.key.get_pressed()
         if keys[pg.K_LEFT] or keys[pg.K_a]:
             self.rot = 180
+            self.game.player_img = self.game.spritesheet.get_image(*PLAYER_IMG_LEFT)
             self.vel = vec(PLAYER_SPEED / 2, 0).rotate(-self.rot)
         if keys[pg.K_RIGHT] or keys[pg.K_d]:
             self.rot = 360
+            self.game.player_img = self.game.spritesheet.get_image(*PLAYER_IMG_RIGHT)
             self.vel = vec(PLAYER_SPEED / 2, 0).rotate(-self.rot)
         if keys[pg.K_UP] or keys[pg.K_w]:
             self.rot = 90
+            self.game.player_img = self.game.spritesheet.get_image(*PLAYER_IMG_UP)
             self.vel = vec(PLAYER_SPEED / 2, 0).rotate(-self.rot)
         if keys[pg.K_DOWN] or keys[pg.K_s]:
             self.rot = 270
+            self.game.player_img = self.game.spritesheet.get_image(*PLAYER_IMG_NORMAL)
             self.vel = vec(PLAYER_SPEED / 2, 0).rotate(-self.rot)
 
 
@@ -62,7 +81,7 @@ class Player(pg.sprite.Sprite):
 
     def update(self):
         self.get_keys()
-        self.image = pg.transform.rotate(self.game.player_img, self.rot)
+        self.image = self.game.player_img
         self.rot = (self.rot + self.rot_speed * self.game.dt) % 360
         self.rect = self.image.get_rect()
         self.rect.center = self.pos

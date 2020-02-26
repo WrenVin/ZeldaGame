@@ -21,7 +21,8 @@ class Game:
         img_folder = path.join(game_folder, 'img')
 
         self.map = Map(path.join(game_folder, 'map.txt'))
-        self.player_img = pg.image.load(path.join(img_folder, PLAYER_IMG)).convert_alpha()
+        self.spritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETPLAYER))
+        self.player_img = self.spritesheet.get_image(*PLAYER_IMG_NORMAL)
 
     def new(self):
         # initialize all variables and do all the setup for a new game
@@ -69,8 +70,15 @@ class Game:
             if event.type == pg.QUIT:
                 self.quit()
             if event.type == pg.KEYDOWN:
+                if event.key == pg.K_a:
+                    #self.player_img = self.spritesheet.get_image(*PLAYER_IMG_LEFT)
+                    #print("No")
+                    pass
                 if event.key == pg.K_ESCAPE:
                     self.quit()
+            
+                
+                
 
 
 
