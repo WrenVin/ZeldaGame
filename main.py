@@ -65,8 +65,6 @@ class Game:
 
     def draw(self):
         self.screen.fill(BGCOLOR)
-        #self.img = self.grass
-        self.draw_grid()
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
         pg.display.flip()
@@ -78,26 +76,17 @@ class Game:
                 self.quit()
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_a:
-                    #self.player_img = self.spritesheet.get_image(*PLAYER_IMG_LEFT)
-                    #print("No")
                     pass
                 if event.key == pg.K_ESCAPE:
                     self.quit()
             
-                
-                
-
-
-
 
     def show_start_screen(self):
         pass
 
-
     def show_go_screen(self):
         pass
 
-# create the game object
 g = Game()
 g.show_start_screen()
 while True:

@@ -27,7 +27,6 @@ class Camera:
         x = -target.rect.x + int(WIDTH/2)
         y = -target.rect.y + int(WIDTH/2)
 
-
         #limit
         x = min(0, x)
         y = min(0, y)
