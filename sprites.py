@@ -25,33 +25,33 @@ class Player(pg.sprite.Sprite):
         self.game = game
         self.image = game.player_img
         self.rect = self.image.get_rect()
-        self.vel = vec(0, 0)
-        self.pos = vec(x, y) * TILESIZE
-        self.rot = 0
-        self.dx = self.rect.x
-        self.dy = self.rect.y
+        self.vx, self.vy = 0, 0
+        self.x = x * TILESIZE
+        self.y = y * TILESIZE
 
 
     def get_keys(self):
-        self.rot_speed = 0
-        self.vel = vec(0, 0)
+        self.vx, self.vy = 0, 0
         keys = pg.key.get_pressed()
         if keys[pg.K_LEFT] or keys[pg.K_a]:
             self.rot = 180
             self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_LEFT)
-            self.vel = vec(PLAYER_SPEED / 2, 0).rotate(-self.rot)
+            self.vx = -300
         if keys[pg.K_RIGHT] or keys[pg.K_d]:
             self.rot = 360
             self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_RIGHT)
-            self.vel = vec(PLAYER_SPEED / 2, 0).rotate(-self.rot)
+            self.vx = 300
         if keys[pg.K_UP] or keys[pg.K_w]:
             self.rot = 90
             self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_UP)
-            self.vel = vec(PLAYER_SPEED / 2, 0).rotate(-self.rot)
+            self.vy = -300
         if keys[pg.K_DOWN] or keys[pg.K_s]:
             self.rot = 270
             self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_NORMAL)
-            self.vel = vec(PLAYER_SPEED / 2, 0).rotate(-self.rot)
+            self.vy = 300
+        if self.vx != 0 and self.vy != 0:
+            self.vx *= 0.7071
+            self.vy *= 0.7071
 
 
     def collide_with_walls(self, dir):
@@ -77,18 +77,12 @@ class Player(pg.sprite.Sprite):
     def update(self):
         self.get_keys()
         self.image = self.game.player_img
-        self.rot = (self.rot + self.rot_speed * self.game.dt) % 360
-        self.rect = self.image.get_rect()
-        self.rect.center = self.pos
-        self.pos += self.vel * self.game.dt
-        self.dx = self.rect.x
-        self.dy = self.rect.y
-        print(self.dx, self.dy)
-        #\self.rect.centerx = self.pos.x
-        #\self.collide_with_walls('x')
-        #\self.rect.centery = self.pos.y
-        #\self.collide_with_walls('y')
-
+        self.x += self.vx * self.game.dt
+        self.y += self.vy * self.game.dt
+        self.rect.x = self.x
+        self.collide_with_walls('x')
+        self.rect.y = self.y
+        self.collide_with_walls('y')
 
 
 
