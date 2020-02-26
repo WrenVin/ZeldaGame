@@ -35,19 +35,19 @@ class Player(pg.sprite.Sprite):
         keys = pg.key.get_pressed()
         if keys[pg.K_LEFT] or keys[pg.K_a]:
             self.rot = 180
-            self.game.player_img = self.game.spritesheet.get_image(*PLAYER_IMG_LEFT)
+            self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_LEFT)
             self.vel = vec(PLAYER_SPEED / 2, 0).rotate(-self.rot)
         if keys[pg.K_RIGHT] or keys[pg.K_d]:
             self.rot = 360
-            self.game.player_img = self.game.spritesheet.get_image(*PLAYER_IMG_RIGHT)
+            self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_RIGHT)
             self.vel = vec(PLAYER_SPEED / 2, 0).rotate(-self.rot)
         if keys[pg.K_UP] or keys[pg.K_w]:
             self.rot = 90
-            self.game.player_img = self.game.spritesheet.get_image(*PLAYER_IMG_UP)
+            self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_UP)
             self.vel = vec(PLAYER_SPEED / 2, 0).rotate(-self.rot)
         if keys[pg.K_DOWN] or keys[pg.K_s]:
             self.rot = 270
-            self.game.player_img = self.game.spritesheet.get_image(*PLAYER_IMG_NORMAL)
+            self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_NORMAL)
             self.vel = vec(PLAYER_SPEED / 2, 0).rotate(-self.rot)
 
 
@@ -59,24 +59,23 @@ class Player(pg.sprite.Sprite):
             hits = pg.sprite.spritecollide(self, self.game.walls, False)
             if hits:
                 self.x = 2
-                #if self.vel.x > 0:
-                #    self.pos.x = hits[0].rect.left - self.rect.width
-                #if self.vel.x < 0:
-                #    self.pos.x = hits[0].rect.right
-                #self.vel.x = 0
-                #self.rect.x = self.pos.x
+                if self.vel.x > 0:
+                    self.pos.x = hits[0].rect.left - self.rect.width
+                if self.vel.x < 0:
+                    self.pos.x = hits[0].rect.right
+                self.vel.x = 0
+                self.rect.x = self.pos.x
                 
         if dir == 'y':
             hits = pg.sprite.spritecollide(self, self.game.walls, False)
             if hits:
                 self.y = 2
-                print('hi')
-                #if self.vel.y > 0:
-                #    self.pos.y = hits[0].rect.top - self.rect.height
-                #if self.vel.y < 0:
-                #    self.pos.y = hits[0].rect.bottom
-                #self.vel.y = 0
-                #self.rect.y = self.pos.y
+                if self.vel.y > 0:
+                    self.pos.y = hits[0].rect.top - self.rect.height
+                if self.vel.y < 0:
+                    self.pos.y = hits[0].rect.bottom
+                self.vel.y = 0
+                self.rect.y = self.pos.y
 
 
     def update(self):
@@ -101,8 +100,7 @@ class Wall(pg.sprite.Sprite):
         self.groups = game.all_sprites, game.walls
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.Surface((TILESIZE, TILESIZE))
-        self.image.fill(GREEN)
+        self.image = game.wall_img
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y

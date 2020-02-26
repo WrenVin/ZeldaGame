@@ -6,7 +6,7 @@ class Map:
     def __init__(self, filename):
         game_folder = path.dirname(__file__)
         self.data = []
-        with open (path.join(game_folder, "map.txt"), 'rt') as f:
+        with open (path.join(game_folder, "map2.txt"), 'rt') as f:
             for line in f:
                 self.data.append(line.strip())
 

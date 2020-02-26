@@ -21,14 +21,16 @@ class Game:
         img_folder = path.join(game_folder, 'img')
 
         self.map = Map(path.join(game_folder, 'map.txt'))
-        self.spritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETPLAYER))
-        self.player_img = self.spritesheet.get_image(*PLAYER_IMG_NORMAL)
+        self.playerspritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETPLAYER))
+        self.worldspritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETWORLD))
+        self.player_img = self.playerspritesheet.get_image(*PLAYER_IMG_NORMAL)
+        self.wall_img = self.worldspritesheet.get_image(*BORDER)
 
     def new(self):
         # initialize all variables and do all the setup for a new game
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
-        self.player = Player(self, 3, 3)
+        self.player = Player(self, 2, 2)
         for row, tiles in enumerate(self.map.data):
             for col, tile in enumerate(tiles.strip()):
                 if tile == '1':
