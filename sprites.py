@@ -17,6 +17,8 @@ class SpriteSheet:
     
 class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y):
+        self.x = x
+        self.y = y
         self.game = game
         self.groups = game.all_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
@@ -26,6 +28,8 @@ class Player(pg.sprite.Sprite):
         self.vel = vec(0, 0)
         self.pos = vec(x, y) * TILESIZE
         self.rot = 0
+        self.dx = self.rect.x
+        self.dy = self.rect.y
 
 
     def get_keys(self):
@@ -50,32 +54,25 @@ class Player(pg.sprite.Sprite):
             self.vel = vec(PLAYER_SPEED / 2, 0).rotate(-self.rot)
 
 
-
-
-
     def collide_with_walls(self, dir):
         if dir == 'x':
             hits = pg.sprite.spritecollide(self, self.game.walls, False)
             if hits:
-                self.x = 2
-                if self.vel.x > 0:
-                    self.pos.x = hits[0].rect.left - self.rect.width
-                if self.vel.x < 0:
-                    self.pos.x = hits[0].rect.right
-                self.vel.x = 0
-                self.rect.x = self.pos.x
-                
+                if self.vx > 0:
+                    self.x = hits[0].rect.left - self.rect.width
+                if self.vx < 0:
+                    self.x = hits[0].rect.right
+                self.vx = 0
+                self.rect.x = self.x
         if dir == 'y':
             hits = pg.sprite.spritecollide(self, self.game.walls, False)
             if hits:
-                self.y = 2
-                if self.vel.y > 0:
-                    self.pos.y = hits[0].rect.top - self.rect.height
-                if self.vel.y < 0:
-                    self.pos.y = hits[0].rect.bottom
-                self.vel.y = 0
-                self.rect.y = self.pos.y
-
+                if self.vy > 0:
+                    self.y = hits[0].rect.top - self.rect.height
+                if self.vy < 0:
+                    self.y = hits[0].rect.bottom
+                self.vy = 0
+                self.rect.y = self.y
 
     def update(self):
         self.get_keys()
@@ -84,10 +81,13 @@ class Player(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
         self.pos += self.vel * self.game.dt
-        #self.rect.centerx = self.pos.x
-        self.collide_with_walls('x')
-        #self.rect.centery = self.pos.y
-        self.collide_with_walls('y')
+        self.dx = self.rect.x
+        self.dy = self.rect.y
+        print(self.dx, self.dy)
+        #\self.rect.centerx = self.pos.x
+        #\self.collide_with_walls('x')
+        #\self.rect.centery = self.pos.y
+        #\self.collide_with_walls('y')
 
 
 
