@@ -18,7 +18,13 @@ class Game:
 
     def load_data(self):
         game_folder = path.dirname(__file__)
-        img_folder = path.join(game_folder, 'img')   
+        img_folder = path.join(game_folder, 'img')
+        snd_folder = path.join(game_folder, 'snd')
+        pg.mixer.music.load('snd/background.mp3') 
+        self.walk_sound = pg.mixer.Sound('snd/walk.mp3')
+        self.walk_sound.set_volume(0.03)
+        pg.mixer.music.set_volume(0.15)
+        pg.mixer.music.play(-1, 0) 
         self.map = Map(path.join(game_folder, GAMEMAP))
         self.playerspritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETPLAYER))
         self.worldspritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETWORLD))
