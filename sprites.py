@@ -12,7 +12,7 @@ class SpriteSheet:
         image = pg.Surface((width, height))
         image.blit(self.spritesheet, (0,0), (x, y, width, height))
         image = pg.transform.scale(image, ((width*2, height*2)))
-        image.set_colorkey((BLACK))
+        image.set_colorkey((WHITE))
         return image
     
 class Player(pg.sprite.Sprite):
@@ -28,26 +28,61 @@ class Player(pg.sprite.Sprite):
         self.vx, self.vy = 0, 0
         self.x = x * TILESIZE
         self.y = y * TILESIZE
-
+        self.last_update = pg.time.get_ticks()
+        self.frame = 0
+        self.frame_rate = ANIMATIONSPEED
 
     def get_keys(self):
         self.vx, self.vy = 0, 0
         keys = pg.key.get_pressed()
         if keys[pg.K_LEFT] or keys[pg.K_a]:
-            self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_LEFT)
+            now = pg.time.get_ticks()
+            #self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_LEFT)
             self.vx = -200
+            if now - self.last_update > self.frame_rate:
+               self.last_update = now
+               try:
+                    self.game.player_img = self.game.walkleft[self.frame]
+                    self.frame += 1
+               except IndexError:
+                    self.frame = 0
         if keys[pg.K_RIGHT] or keys[pg.K_d]:
-            self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_RIGHT)
+            now = pg.time.get_ticks()
+            #self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_RIGHT)
             self.vx = 200
+            if now - self.last_update > self.frame_rate:
+               self.last_update = now
+               try:
+                    self.game.player_img = self.game.walkright[self.frame]
+                    self.frame += 1
+               except IndexError:
+                    self.frame = 0
         if keys[pg.K_UP] or keys[pg.K_w]:
-            self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_UP)
+            now = pg.time.get_ticks()
+            #self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_UP)
             self.vy = -200
+            if now - self.last_update > self.frame_rate:
+               self.last_update = now
+               try:
+                    self.game.player_img = self.game.walkup[self.frame]
+                    self.frame += 1
+               except IndexError:
+                    self.frame = 0
         if keys[pg.K_DOWN] or keys[pg.K_s]:
-            self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_NORMAL)
+            now = pg.time.get_ticks()
+            #self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_NORMAL)
             self.vy = 200
+            if now - self.last_update > self.frame_rate:
+               self.last_update = now
+               try:
+                    self.game.player_img = self.game.walkdown[self.frame]
+                    self.frame += 1
+               except IndexError:
+                    self.frame = 0
         if self.vx != 0 and self.vy != 0:
             self.vx *= 0.7071
             self.vy *= 0.7071
+        
 
 
     def collide_with_walls(self, dir):

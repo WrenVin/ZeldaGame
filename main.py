@@ -18,8 +18,7 @@ class Game:
 
     def load_data(self):
         game_folder = path.dirname(__file__)
-        img_folder = path.join(game_folder, 'img')
-
+        img_folder = path.join(game_folder, 'img')   
         self.map = Map(path.join(game_folder, GAMEMAP))
         self.playerspritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETPLAYER))
         self.worldspritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETWORLD))
@@ -27,7 +26,27 @@ class Game:
         self.wall_img = self.worldspritesheet.get_image(*BORDER).convert()
         self.grass = pg.image.load((path.join(img_folder, 'grass.png'))).convert()
         self.sword = pg.image.load((path.join(img_folder, 'sword.png'))).convert()
-
+        self.walkdown1 = self.playerspritesheet.get_image(*WALKDOWN1).convert()
+        self.walkdown2 = self.playerspritesheet.get_image(*WALKDOWN2).convert()
+        self.walkdown3 = self.playerspritesheet.get_image(*WALKDOWN3).convert()
+        self.walkdown4 = self.playerspritesheet.get_image(*WALKDOWN4).convert()
+        self.walkdown = [self.walkdown1, self.walkdown2, self.walkdown3, self.walkdown4]
+        self.walkright1 = self.playerspritesheet.get_image(*WALKRIGHT1).convert()
+        self.walkright2 = self.playerspritesheet.get_image(*WALKRIGHT2).convert()
+        self.walkright3 = self.playerspritesheet.get_image(*WALKRIGHT3).convert()
+        self.walkright4 = self.playerspritesheet.get_image(*WALKRIGHT4).convert()
+        self.walkright = [self.walkright1, self.walkright2, self.walkright3, self.walkright4]
+        self.walkleft1 = self.playerspritesheet.get_image(*WALKLEFT1).convert()
+        self.walkleft2 = self.playerspritesheet.get_image(*WALKLEFT2).convert()
+        self.walkleft3 = self.playerspritesheet.get_image(*WALKLEFT3).convert()
+        self.walkleft4 = self.playerspritesheet.get_image(*WALKLEFT4).convert()
+        self.walkleft = [self.walkleft1, self.walkleft2, self.walkleft3, self.walkleft4]
+        self.walkup1 = self.playerspritesheet.get_image(*WALKUP1).convert()
+        self.walkup2 = self.playerspritesheet.get_image(*WALKUP2).convert()
+        self.walkup3 = self.playerspritesheet.get_image(*WALKUP3).convert()
+        self.walkup4 = self.playerspritesheet.get_image(*WALKUP4).convert()
+        self.walkup = [self.walkup1, self.walkup2, self.walkup3, self.walkup4]
+        
     def new(self):
         # initialize all variables and do all the setup for a new game
         self.all_sprites = pg.sprite.Group()
@@ -44,7 +63,7 @@ class Game:
                     Ground(self, col, row)
                     Sword(self, col-0.5, row)
                 
-        self.player = Player(self, 37, 39)
+        self.player = Player(self, 1, 1)
         self.camera = Camera(self.map.width, self.map.height)
     def run(self):
         # game loop - set self.playing = False to end the game
@@ -95,7 +114,7 @@ class Game:
 
 
     def show_go_screen(self):
-        
+        pass
 
 g = Game()
 g.show_start_screen()
