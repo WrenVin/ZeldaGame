@@ -14,6 +14,8 @@ class Map:
         self.tilehieght = len(self.data)
         self.width = self.tilewidth * TILESIZE
         self.height = self.tilehieght * TILESIZE
+        
+        
 class Camera:
     def __init__(self, width, height):
         self.camera = pg.Rect(0, 0, width,height)

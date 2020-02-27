@@ -23,22 +23,28 @@ class Game:
         self.map = Map(path.join(game_folder, GAMEMAP))
         self.playerspritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETPLAYER))
         self.worldspritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETWORLD))
-        self.player_img = self.playerspritesheet.get_image(*PLAYER_IMG_NORMAL)
-        self.wall_img = self.worldspritesheet.get_image(*BORDER)
-        self.grass = pg.image.load((path.join(img_folder, 'grass.png')))
+        self.player_img = self.playerspritesheet.get_image(*PLAYER_IMG_NORMAL).convert()
+        self.wall_img = self.worldspritesheet.get_image(*BORDER).convert()
+        self.grass = pg.image.load((path.join(img_folder, 'grass.png'))).convert()
+        self.sword = pg.image.load((path.join(img_folder, 'sword.png'))).convert()
 
     def new(self):
         # initialize all variables and do all the setup for a new game
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
         self.ground = pg.sprite.Group()
+        self.swords = pg.sprite.Group()
         for row, tiles in enumerate(self.map.data):
             for col, tile in enumerate(tiles.strip()):
                 if tile == '+' or tile == '-' or tile == '|':
                     Wall(self, col, row)
                 elif tile == ' ':
                     Ground(self, col, row)
-        self.player = Player(self, 1, 1)
+                elif tile == 'A':
+                    Ground(self, col, row)
+                    Sword(self, col-0.5, row)
+                
+        self.player = Player(self, 37, 39)
         self.camera = Camera(self.map.width, self.map.height)
     def run(self):
         # game loop - set self.playing = False to end the game
@@ -64,7 +70,7 @@ class Game:
             pg.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
 
     def draw(self):
-        self.screen.fill(BGCOLOR)
+        #self.screen.fill(BGCOLOR)
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
         pg.display.flip()
@@ -79,6 +85,9 @@ class Game:
                     pass
                 if event.key == pg.K_ESCAPE:
                     self.quit()
+        if len(self.swords) == 0:
+            self.playing = False
+        
             
 
     def show_start_screen(self):
@@ -86,7 +95,7 @@ class Game:
 
 
     def show_go_screen(self):
-        pass
+        
 
 g = Game()
 g.show_start_screen()

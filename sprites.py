@@ -69,6 +69,10 @@ class Player(pg.sprite.Sprite):
                     self.y = hits[0].rect.bottom
                 self.vy = 0
                 self.rect.y = self.y
+        if dir == 'x':
+            hits = pg.sprite.spritecollide(self, self.game.swords, True)
+        if dir == 'y':
+            hits = pg.sprite.spritecollide(self, self.game.swords, True)
 
     def update(self):
         self.get_keys()
@@ -104,6 +108,20 @@ class Ground(pg.sprite.Sprite):
         self.game = game
         self.image = self.game.grass
         self.image = pg.transform.scale(self.image, (TILESIZE, TILESIZE))
+        self.rect = self.image.get_rect()
+        self.x = x
+        self.y = y
+        self.rect.x = x * TILESIZE
+        self.rect.y = y * TILESIZE
+        
+class Sword(pg.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.groups = game.all_sprites, game.swords
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = self.game.sword
+        self.image.set_colorkey(WHITE)
+        self.image = pg.transform.scale(self.image, (TILESIZE+50, TILESIZE-0))
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y
