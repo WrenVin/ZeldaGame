@@ -3,7 +3,7 @@ import pygame as pg
 BLACK = (0, 0, 0)
 DARKGREY = (40, 40, 40)
 LIGHTGREY = (100, 100, 100)
-GREEN = (0, 255, 0)
+GREEN = (0, 153, 51)
 RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
 SPRITESHEETPLAYER = 'character.png'
@@ -13,8 +13,8 @@ HEIGHT = 768  # 16 * 48 or 32 * 24 or 64 * 12
 FPS = 60
 TITLE = "Trial of the Sword"
 BGCOLOR = DARKGREY
-GAMEMAP = 'EasyMap.txt'
-
+FONT_NAME = 'arial'
+ORANGE = (255,165,0)
 TILESIZE = 60
 GRIDWIDTH = WIDTH / TILESIZE
 

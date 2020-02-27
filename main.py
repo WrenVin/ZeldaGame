@@ -9,11 +9,14 @@ from tilemap import *
 class Game:
     def __init__(self):
         pg.init()
-        self.screen = pg.display.set_mode((WIDTH, HEIGHT))
+        self.screen = pg.display.set_mode((WIDTH, HEIGHT), pg.RESIZABLE)
         pg.display.set_caption(TITLE)
         self.clock = pg.time.Clock()
         #pg.key.set_repeat(1, 20)
-        self.load_data()
+        self.font_name = pg.font.match_font(FONT_NAME)
+        self.gamemap = 'None'
+        #self.load_data()
+        
 
 
     def load_data(self):
@@ -22,10 +25,12 @@ class Game:
         snd_folder = path.join(game_folder, 'snd')
         pg.mixer.music.load('snd/background.mp3') 
         self.walk_sound = pg.mixer.Sound('snd/walk.mp3')
+        self.victory_sound = pg.mixer.Sound('snd/victory.mp3')
         self.walk_sound.set_volume(0.03)
+        self.victory_sound.set_volume(0.5)
         pg.mixer.music.set_volume(0.15)
         pg.mixer.music.play(-1, 0) 
-        self.map = Map(path.join(game_folder, GAMEMAP))
+        self.map = Map(path.join(game_folder, self.gamemap))
         self.playerspritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETPLAYER))
         self.worldspritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETWORLD))
         self.player_img = self.playerspritesheet.get_image(*PLAYER_IMG_NORMAL).convert()
@@ -54,6 +59,7 @@ class Game:
         self.walkup = [self.walkup1, self.walkup2, self.walkup3, self.walkup4]
         
     def new(self):
+        self.load_data()
         # initialize all variables and do all the setup for a new game
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
@@ -86,6 +92,7 @@ class Game:
 
     def update(self):
         # update portion of the game loop
+        self.screen.fill(BLACK)
         self.player.update()
         self.camera.update(self.player)
     def draw_grid(self):
@@ -110,21 +117,60 @@ class Game:
                     pass
                 if event.key == pg.K_ESCAPE:
                     self.quit()
+            if event.type == pg.VIDEORESIZE:
+                self.screen = pg.display.set_mode((event.w, event.h), pg.RESIZABLE)
+                
         if len(self.swords) == 0:
             self.playing = False
         
-            
+    def draw_text(self, text, size, color, x, y):
+        font = pg.font.Font(self.font_name, size)
+        text_surface = font.render(text, True, color)
+        text_rect = text_surface.get_rect()
+        text_rect.midtop = (int(x), int(y))
+        self.screen.blit(text_surface, text_rect)        
 
     def show_start_screen(self):
-        pass
-
-
+        self.screen.fill(GREEN)
+        self.draw_text("Trial of the Sword", 30, WHITE, WIDTH/2, HEIGHT/3)
+        self.draw_text("Search the maze for the sword in the stone!", 20, WHITE, WIDTH/2, HEIGHT/2)
+        self.draw_text("Press 1 for easy, 2 for moderate, 3 for hard.", 20, WHITE, WIDTH/2, HEIGHT* 3/4)
+        pg.display.flip()
+        self.wait_for_key()
+        
+    def wait_for_key(self):
+        waiting = True
+        while waiting:
+            keys = pg.key.get_pressed()
+            self.clock.tick(FPS)
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    waiting = False
+                    self.playing = False
+            if keys[pg.K_1]:
+                self.gamemap = 'EasyMap.txt'
+                waiting = False
+            if keys[pg.K_2]:
+                self.gamemap = 'ModerateMap.txt'
+                waiting = False
+            if keys[pg.K_3]:
+                self.gamemap = 'HardMap.txt'
+                waiting = False
+                           
     def show_go_screen(self):
-        pass
-
+        pg.mixer.music.stop()
+        self.walk_sound.stop()
+        self.screen.fill(ORANGE)
+        self.draw_text("You found the Sword!!", 36, WHITE, WIDTH/2, HEIGHT/3)
+        self.draw_text("Play again!", 20, WHITE, WIDTH/2, HEIGHT/2)
+        self.draw_text("Press 1 for easy, 2 for moderate, 3 for hard.", 20, WHITE, WIDTH/2, HEIGHT* 3/4)
+        pg.display.flip()
+        self.victory_sound.play()
+        self.wait_for_key()
+        
 g = Game()
 g.show_start_screen()
 while True:
     g.new()
     g.run()
-    g.show_go_screen()
+    #g.show_go_screen()

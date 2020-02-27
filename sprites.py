@@ -110,10 +110,11 @@ class Player(pg.sprite.Sprite):
                     self.y = hits[0].rect.bottom
                 self.vy = 0
                 self.rect.y = self.y
-        if dir == 'x':
-            hits = pg.sprite.spritecollide(self, self.game.swords, True)
-        if dir == 'y':
-            hits = pg.sprite.spritecollide(self, self.game.swords, True)
+        
+        hits = pg.sprite.spritecollide(self, self.game.swords, True)
+        if hits:
+            self.game.show_go_screen()
+       
 
     def update(self):
         self.get_keys()
