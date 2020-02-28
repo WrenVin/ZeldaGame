@@ -8,8 +8,8 @@ RED = (255, 0, 0)
 YELLOW = (255, 255, 0)
 SPRITESHEETPLAYER = 'character.png'
 SPRITESHEETWORLD = 'Overworld.png'
-WIDTH = 1024   # 16 * 64 or 32 * 32 or 64 * 16
-HEIGHT = 768  # 16 * 48 or 32 * 24 or 64 * 12
+WIDTH = 800   # 16 * 64 or 32 * 32 or 64 * 16
+HEIGHT = 600  # 16 * 48 or 32 * 24 or 64 * 12
 FPS = 60
 TITLE = "Trial of the Sword"
 BGCOLOR = DARKGREY
@@ -31,10 +31,10 @@ PLAYER_ROT_SPEED = 250
 
 #Animations
 ANIMATIONSPEED = 100
-WALKDOWN1 = [1, 7, 14, 22]
-WALKDOWN2 = [17, 7, 14, 22]
-WALKDOWN3 = [33, 7, 14, 22]
-WALKDOWN4 = [49, 7, 14, 22]
+WALKDOWN1 = [1, 7, 15, 22]
+WALKDOWN2 = [17, 7, 15, 22]
+WALKDOWN3 = [33, 7, 15, 22]
+WALKDOWN4 = [49, 7, 15, 22]
 
 WALKRIGHT1 = [2, 38, 14, 22]
 WALKRIGHT2 = [17, 38, 14, 22]

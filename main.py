@@ -23,13 +23,13 @@ class Game:
         game_folder = path.dirname(__file__)
         img_folder = path.join(game_folder, 'img')
         snd_folder = path.join(game_folder, 'snd')
-        pg.mixer.music.load('snd/background.mp3') 
-        self.walk_sound = pg.mixer.Sound('snd/walk.mp3')
-        self.victory_sound = pg.mixer.Sound('snd/victory.mp3')
-        self.walk_sound.set_volume(0.03)
-        self.victory_sound.set_volume(0.5)
-        pg.mixer.music.set_volume(0.15)
-        pg.mixer.music.play(-1, 0) 
+        #pg.mixer.music.load(path.join(snd_folder, 'background.wav')) 
+        #elf.walk_sound = pg.mixer.Sound('snd/walk.mp3')
+        #self.victory_sound = pg.mixer.Sound('snd/victory.mp3')
+        #self.walk_sound.set_volume(0.03)
+        #self.victory_sound.set_volume(0.5)
+        #pg.mixer.music.set_volume(0.15)
+       # pg.mixer.music.play(-1, 0) 
         self.map = Map(path.join(game_folder, self.gamemap))
         self.playerspritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETPLAYER))
         self.worldspritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETWORLD))
@@ -57,6 +57,19 @@ class Game:
         self.walkup3 = self.playerspritesheet.get_image(*WALKUP3).convert()
         self.walkup4 = self.playerspritesheet.get_image(*WALKUP4).convert()
         self.walkup = [self.walkup1, self.walkup2, self.walkup3, self.walkup4]
+        self.attackdown1 = pg.image.load((path.join(img_folder, 'downswing1.png'))).convert()
+        self.attackdown2 = pg.image.load((path.join(img_folder, 'downswing2.png'))).convert()
+        self.attackdown3 = pg.image.load((path.join(img_folder, 'downswing3.png'))).convert()
+        self.attackdown4 = pg.image.load((path.join(img_folder, 'downswing4.png'))).convert()
+        self.attackdown1 = pg.transform.scale(self.attackdown1, (16*2, 22*2))
+        self.attackdown2 = pg.transform.scale(self.attackdown2, (16*2, 22*2))
+        self.attackdown3 = pg.transform.scale(self.attackdown3, (16*2, 24*2))
+        self.attackdown4 = pg.transform.scale(self.attackdown4, (16*2, 24*2))
+        self.attackdown1.set_colorkey(WHITE)
+        self.attackdown2.set_colorkey(WHITE)
+        self.attackdown3.set_colorkey(WHITE)
+        self.attackdown4.set_colorkey(WHITE)
+        self.playerattackdown = [self.attackdown1, self.attackdown2, self.attackdown3, self.attackdown4, self.walkdown1]
         
     def new(self):
         self.load_data()
@@ -75,7 +88,7 @@ class Game:
                     Ground(self, col, row)
                     Sword(self, col-0.5, row)
                 
-        self.player = Player(self, 37, 39)
+        self.player = Player(self, 1, 1)
         self.camera = Camera(self.map.width, self.map.height)
     def run(self):
         # game loop - set self.playing = False to end the game
@@ -105,7 +118,7 @@ class Game:
         #self.screen.fill(BGCOLOR)
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
-        pg.display.flip()
+        pg.display.update()
 
     def events(self):
         # catch all events here
@@ -113,8 +126,6 @@ class Game:
             if event.type == pg.QUIT:
                 self.quit()
             if event.type == pg.KEYDOWN:
-                if event.key == pg.K_a:
-                    pass
                 if event.key == pg.K_ESCAPE:
                     self.quit()
             if event.type == pg.VIDEORESIZE:
@@ -158,14 +169,14 @@ class Game:
                 waiting = False
                            
     def show_go_screen(self):
-        pg.mixer.music.fadeout(2000)
-        self.walk_sound.stop()
+        #pg.mixer.music.fadeout(2000)
+        #self.walk_sound.stop()
         self.screen.fill(ORANGE)
         self.draw_text("You found the Sword!!", 36, WHITE, WIDTH/2, HEIGHT/3)
         self.draw_text("Play again!", 20, WHITE, WIDTH/2, HEIGHT/2)
-        self.draw_text("Press 1 for easy, 2 for moderate, 3 for hard.", 20, WHITE, WIDTH/2, HEIGHT* 3/4)
+        self.draw_text("Press 1 for moderate, 2 for hard, 3 for inasane.", 20, WHITE, WIDTH/2, HEIGHT* 3/4)
         pg.display.flip()
-        self.victory_sound.play()
+        #self.victory_sound.play()
         self.wait_for_key()
         
 g = Game()

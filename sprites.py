@@ -14,6 +14,14 @@ class SpriteSheet:
         image = pg.transform.scale(image, ((width*2, height*2)))
         image.set_colorkey((WHITE))
         return image
+
+    def loadImage(self, inimage, x, y, width, height):
+        #Gets image off sprite sheet
+        image = pg.Surface((width, height))
+        image.blit(inimage, (0,0), (x, y, width, height))
+        image = pg.transform.scale(image, ((width*2, height*2)))
+        image.set_colorkey((WHITE))
+        return image
     
 class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y):
@@ -31,15 +39,17 @@ class Player(pg.sprite.Sprite):
         self.last_update = pg.time.get_ticks()
         self.frame = 0
         self.frame_rate = ANIMATIONSPEED
+        self.direction = 'down'
 
     def get_keys(self):
         self.vx, self.vy = 0, 0
         keys = pg.key.get_pressed()
         if keys[pg.K_LEFT] or keys[pg.K_a]:
-            self.game.walk_sound.play(-1)
+          #  self.game.walk_sound.play(-1)
             now = pg.time.get_ticks()
             #self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_LEFT)
             self.vx = -200
+            self.direction = 'left'
             if now - self.last_update > self.frame_rate:
                self.last_update = now
                try:
@@ -48,10 +58,11 @@ class Player(pg.sprite.Sprite):
                except IndexError:
                     self.frame = 0
         elif keys[pg.K_RIGHT] or keys[pg.K_d]:
-            self.game.walk_sound.play(-1)
+           # self.game.walk_sound.play(-1)
             now = pg.time.get_ticks()
             #self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_RIGHT)
             self.vx = 200
+            self.direction = 'right'
             if now - self.last_update > self.frame_rate:
                self.last_update = now
                try:
@@ -60,10 +71,11 @@ class Player(pg.sprite.Sprite):
                except IndexError:
                     self.frame = 0
         elif keys[pg.K_UP] or keys[pg.K_w]:
-            self.game.walk_sound.play(-1)
+            #self.game.walk_sound.play(-1)
             now = pg.time.get_ticks()
             #self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_UP)
             self.vy = -200
+            self.direction = 'up'
             if now - self.last_update > self.frame_rate:
                self.last_update = now
                try:
@@ -72,8 +84,9 @@ class Player(pg.sprite.Sprite):
                except IndexError:
                     self.frame = 0
         elif keys[pg.K_DOWN] or keys[pg.K_s]:
-            self.game.walk_sound.play(-1)
+           # self.game.walk_sound.play(-1)
             now = pg.time.get_ticks()
+            self.direction = 'down'
             #self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_NORMAL)
             self.vy = 200
             if now - self.last_update > self.frame_rate:
@@ -83,13 +96,27 @@ class Player(pg.sprite.Sprite):
                     self.frame += 1
                except IndexError:
                     self.frame = 0
+        elif keys[pg.K_SPACE]:
+            now = pg.time.get_ticks()
+            try:
+                if now - self.last_update > self.frame_rate:
+                    if self.direction == 'down':
+                        self.game.player_img = self.game.playerattackdown[self.frame]
+                        self.frame += 1
+                        self.last_update = now
+            except IndexError:
+                self.frame = 0
         elif self.vx != 0 and self.vy != 0:
             self.vx *= 0.7071
             self.vy *= 0.7071
-        else:
-            self.game.walk_sound.stop()
+        elif keys[pg.K_t]:
+            self.x = 1 * TILESIZE
+            self.y = 1 * TILESIZE
+        elif self.direction == 'down':
+            self.game.player_img = self.game.walkdown1
+            pass
+            #self.game.walk_sound.stop()
         
-
 
     def collide_with_walls(self, dir):
         if dir == 'x':
