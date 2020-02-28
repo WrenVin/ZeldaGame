@@ -45,7 +45,7 @@ class Player(pg.sprite.Sprite):
         self.vx, self.vy = 0, 0
         keys = pg.key.get_pressed()
         if keys[pg.K_LEFT] or keys[pg.K_a]:
-          #  self.game.walk_sound.play(-1)
+            self.game.walk_sound.play(-1)
             now = pg.time.get_ticks()
             #self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_LEFT)
             self.vx = -200
@@ -58,7 +58,7 @@ class Player(pg.sprite.Sprite):
                except IndexError:
                     self.frame = 0
         elif keys[pg.K_RIGHT] or keys[pg.K_d]:
-           # self.game.walk_sound.play(-1)
+            self.game.walk_sound.play(-1)
             now = pg.time.get_ticks()
             #self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_RIGHT)
             self.vx = 200
@@ -71,7 +71,7 @@ class Player(pg.sprite.Sprite):
                except IndexError:
                     self.frame = 0
         elif keys[pg.K_UP] or keys[pg.K_w]:
-            #self.game.walk_sound.play(-1)
+            self.game.walk_sound.play(-1)
             now = pg.time.get_ticks()
             #self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_UP)
             self.vy = -200
@@ -84,10 +84,10 @@ class Player(pg.sprite.Sprite):
                except IndexError:
                     self.frame = 0
         elif keys[pg.K_DOWN] or keys[pg.K_s]:
-           # self.game.walk_sound.play(-1)
+            self.game.walk_sound.play(-1)
             now = pg.time.get_ticks()
             self.direction = 'down'
-            #self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_NORMAL)
+            self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_NORMAL)
             self.vy = 200
             if now - self.last_update > self.frame_rate:
                self.last_update = now
@@ -115,7 +115,7 @@ class Player(pg.sprite.Sprite):
         elif self.direction == 'down':
             self.game.player_img = self.game.walkdown1
             pass
-            #self.game.walk_sound.stop()
+            self.game.walk_sound.stop()
         
 
     def collide_with_walls(self, dir):
