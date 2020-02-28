@@ -75,7 +75,7 @@ class Game:
                     Ground(self, col, row)
                     Sword(self, col-0.5, row)
                 
-        self.player = Player(self, 1, 1)
+        self.player = Player(self, 37, 39)
         self.camera = Camera(self.map.width, self.map.height)
     def run(self):
         # game loop - set self.playing = False to end the game
@@ -158,7 +158,7 @@ class Game:
                 waiting = False
                            
     def show_go_screen(self):
-        pg.mixer.music.stop()
+        pg.mixer.music.fadeout(2000)
         self.walk_sound.stop()
         self.screen.fill(ORANGE)
         self.draw_text("You found the Sword!!", 36, WHITE, WIDTH/2, HEIGHT/3)
