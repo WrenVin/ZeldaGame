@@ -47,7 +47,6 @@ class Player(pg.sprite.Sprite):
         if keys[pg.K_LEFT] or keys[pg.K_a]:
             self.game.walk_sound.play(-1)
             now = pg.time.get_ticks()
-            #self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_LEFT)
             self.vx = -200
             self.direction = 'left'
             if now - self.last_update > self.frame_rate:
@@ -60,7 +59,6 @@ class Player(pg.sprite.Sprite):
         elif keys[pg.K_RIGHT] or keys[pg.K_d]:
             self.game.walk_sound.play(-1)
             now = pg.time.get_ticks()
-            #self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_RIGHT)
             self.vx = 200
             self.direction = 'right'
             if now - self.last_update > self.frame_rate:
@@ -73,7 +71,6 @@ class Player(pg.sprite.Sprite):
         elif keys[pg.K_UP] or keys[pg.K_w]:
             self.game.walk_sound.play(-1)
             now = pg.time.get_ticks()
-            #self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_UP)
             self.vy = -200
             self.direction = 'up'
             if now - self.last_update > self.frame_rate:
@@ -84,10 +81,10 @@ class Player(pg.sprite.Sprite):
                except IndexError:
                     self.frame = 0
         elif keys[pg.K_DOWN] or keys[pg.K_s]:
+            
             self.game.walk_sound.play(-1)
             now = pg.time.get_ticks()
             self.direction = 'down'
-            self.game.player_img = self.game.playerspritesheet.get_image(*PLAYER_IMG_NORMAL)
             self.vy = 200
             if now - self.last_update > self.frame_rate:
                self.last_update = now
@@ -104,6 +101,18 @@ class Player(pg.sprite.Sprite):
                         self.game.player_img = self.game.playerattackdown[self.frame]
                         self.frame += 1
                         self.last_update = now
+                    if self.direction == 'up':
+                        self.game.player_img = self.game.playerattackup[self.frame]
+                        self.frame += 1
+                        self.last_update = now
+                    if self.direction == 'left':
+                        self.game.player_img = self.game.playerattackleft[self.frame]
+                        self.frame += 1
+                        self.last_update = now
+                    if self.direction == 'right':
+                        self.game.player_img = self.game.playerattackright[self.frame]
+                        self.frame += 1
+                        self.last_update = now
             except IndexError:
                 self.frame = 0
         elif self.vx != 0 and self.vy != 0:
@@ -112,9 +121,7 @@ class Player(pg.sprite.Sprite):
         elif keys[pg.K_t]:
             self.x = 1 * TILESIZE
             self.y = 1 * TILESIZE
-        elif self.direction == 'down':
-            self.game.player_img = self.game.walkdown1
-            pass
+        else:
             self.game.walk_sound.stop()
         
 

@@ -57,19 +57,26 @@ class Game:
         self.walkup3 = self.playerspritesheet.get_image(*WALKUP3).convert()
         self.walkup4 = self.playerspritesheet.get_image(*WALKUP4).convert()
         self.walkup = [self.walkup1, self.walkup2, self.walkup3, self.walkup4]
-        self.attackdown1 = pg.image.load((path.join(img_folder, 'downswing1.png'))).convert()
-        self.attackdown2 = pg.image.load((path.join(img_folder, 'downswing2.png'))).convert()
-        self.attackdown3 = pg.image.load((path.join(img_folder, 'downswing3.png'))).convert()
-        self.attackdown4 = pg.image.load((path.join(img_folder, 'downswing4.png'))).convert()
-        self.attackdown1 = pg.transform.scale(self.attackdown1, (16*2, 22*2))
-        self.attackdown2 = pg.transform.scale(self.attackdown2, (16*2, 22*2))
-        self.attackdown3 = pg.transform.scale(self.attackdown3, (16*2, 24*2))
-        self.attackdown4 = pg.transform.scale(self.attackdown4, (16*2, 24*2))
-        self.attackdown1.set_colorkey(WHITE)
-        self.attackdown2.set_colorkey(WHITE)
-        self.attackdown3.set_colorkey(WHITE)
-        self.attackdown4.set_colorkey(WHITE)
+        self.attackdown1 = self.playerspritesheet.get_image(*ATTACKDOWN1).convert()
+        self.attackdown2 = self.playerspritesheet.get_image(*ATTACKDOWN2).convert()
+        self.attackdown3 = self.playerspritesheet.get_image(*ATTACKDOWN3).convert()
+        self.attackdown4 = self.playerspritesheet.get_image(*ATTACKDOWN4).convert()
         self.playerattackdown = [self.attackdown1, self.attackdown2, self.attackdown3, self.attackdown4, self.walkdown1]
+        self.attackup1 = self.playerspritesheet.get_image(*ATTACKUP1).convert()
+        self.attackup2 = self.playerspritesheet.get_image(*ATTACKUP2).convert()
+        self.attackup3 = self.playerspritesheet.get_image(*ATTACKUP3).convert()
+        self.attackup4 = self.playerspritesheet.get_image(*ATTACKUP4).convert()
+        self.playerattackup = [self.attackup1, self.attackup2, self.attackup3, self.attackup4, self.walkup1]
+        self.attackleft1 = self.playerspritesheet.get_image(*ATTACKLEFT1).convert()
+        self.attackleft2 = self.playerspritesheet.get_image(*ATTACKLEFT2).convert()
+        self.attackleft3 = self.playerspritesheet.get_image(*ATTACKLEFT3).convert()
+        self.attackleft4 = self.playerspritesheet.get_image(*ATTACKLEFT4).convert()
+        self.playerattackleft = [self.attackleft1, self.attackleft2, self.attackleft3, self.attackleft4, self.walkleft1]
+        self.attackright1 = self.playerspritesheet.get_image(*ATTACKRIGHT1).convert()
+        self.attackright2 = self.playerspritesheet.get_image(*ATTACKRIGHT2).convert()
+        self.attackright3 = self.playerspritesheet.get_image(*ATTACKRIGHT3).convert()
+        self.attackright4 = self.playerspritesheet.get_image(*ATTACKRIGHT4).convert()
+        self.playerattackright = [self.attackright1, self.attackright2, self.attackright3, self.attackright4, self.walkright1]
         
     def new(self):
         self.load_data()
