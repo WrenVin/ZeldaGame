@@ -115,6 +115,7 @@ class Game:
         self.screen.fill(BLACK)
         self.player.update()
         self.camera.update(self.player)
+        self.check_for_new_map()
     def draw_grid(self):
         for x in range(0, WIDTH, TILESIZE):
             pg.draw.line(self.screen, LIGHTGREY, (x, 0), (x, HEIGHT))
@@ -126,7 +127,12 @@ class Game:
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
         pg.display.update()
-
+        
+    def check_for_new_map(self):
+        if self.player.x/TILESIZE > 10:
+            self.gamemap = 'map2.txt'
+            self.new()
+        
     def events(self):
         # catch all events here
         for event in pg.event.get():
@@ -166,7 +172,7 @@ class Game:
                     waiting = False
                     self.playing = False
             if keys[pg.K_1]:
-                self.gamemap = 'EasyMap.txt'
+                self.gamemap = 'map.txt'
                 waiting = False
             if keys[pg.K_2]:
                 self.gamemap = 'ModerateMap.txt'
