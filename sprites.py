@@ -45,7 +45,7 @@ class Player(pg.sprite.Sprite):
         self.vx, self.vy = 0, 0
         keys = pg.key.get_pressed()
         if keys[pg.K_LEFT] or keys[pg.K_a]:
-            self.game.walk_sound.play(-1)
+            #self.game.walk_sound.play(-1)
             now = pg.time.get_ticks()
             self.vx = -200
             self.direction = 'left'
@@ -57,7 +57,7 @@ class Player(pg.sprite.Sprite):
                except IndexError:
                     self.frame = 0
         elif keys[pg.K_RIGHT] or keys[pg.K_d]:
-            self.game.walk_sound.play(-1)
+            #self.game.walk_sound.play(-1)
             now = pg.time.get_ticks()
             self.vx = 200
             self.direction = 'right'
@@ -69,7 +69,7 @@ class Player(pg.sprite.Sprite):
                except IndexError:
                     self.frame = 0
         elif keys[pg.K_UP] or keys[pg.K_w]:
-            self.game.walk_sound.play(-1)
+            #self.game.walk_sound.play(-1)
             now = pg.time.get_ticks()
             self.vy = -200
             self.direction = 'up'
@@ -80,9 +80,8 @@ class Player(pg.sprite.Sprite):
                     self.frame += 1
                except IndexError:
                     self.frame = 0
-        elif keys[pg.K_DOWN] or keys[pg.K_s]:
-            
-            self.game.walk_sound.play(-1)
+        elif keys[pg.K_DOWN] or keys[pg.K_s]: 
+            #self.game.walk_sound.play(-1)
             now = pg.time.get_ticks()
             self.direction = 'down'
             self.vy = 200
@@ -122,7 +121,15 @@ class Player(pg.sprite.Sprite):
             self.x = 1 * TILESIZE
             self.y = 1 * TILESIZE
         else:
-            self.game.walk_sound.stop()
+            if self.direction == 'down':
+                self.game.player_img = self.game.walkdown[1]
+            if self.direction == 'up':
+                self.game.player_img = self.game.walkup[1]
+            if self.direction == 'right':
+                self.game.player_img = self.game.walkright[1]
+            if self.direction == 'left':
+                self.game.player_img = self.game.walkleft[1]
+            #self.game.walk_sound.stop()
         
 
     def collide_with_walls(self, dir):
