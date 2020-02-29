@@ -44,6 +44,8 @@ class Player(pg.sprite.Sprite):
     def get_keys(self):
         self.vx, self.vy = 0, 0
         keys = pg.key.get_pressed()
+        now = pg.time.get_ticks()
+        event = pg.event.get()
         if keys[pg.K_LEFT] or keys[pg.K_a]:
             #self.game.walk_sound.play(-1)
             now = pg.time.get_ticks()
@@ -92,35 +94,36 @@ class Player(pg.sprite.Sprite):
                     self.frame += 1
                except IndexError:
                     self.frame = 0
-        elif keys[pg.K_SPACE]:
-            now = pg.time.get_ticks()
-            try:
-                if now - self.last_update > self.frame_rate:
-                    if self.direction == 'down':
-                        self.game.player_img = self.game.playerattackdown[self.frame]
-                        self.frame += 1
-                        self.last_update = now
-                    if self.direction == 'up':
-                        self.game.player_img = self.game.playerattackup[self.frame]
-                        self.frame += 1
-                        self.last_update = now
-                    if self.direction == 'left':
-                        self.game.player_img = self.game.playerattackleft[self.frame]
-                        self.frame += 1
-                        self.last_update = now
-                    if self.direction == 'right':
-                        self.game.player_img = self.game.playerattackright[self.frame]
-                        self.frame += 1
-                        self.last_update = now
-            except IndexError:
-                self.frame = 0
         elif self.vx != 0 and self.vy != 0:
             self.vx *= 0.7071
             self.vy *= 0.7071
         elif keys[pg.K_t]:
             self.x = 1 * TILESIZE
             self.y = 1 * TILESIZE
-        else:
+        for event in event:
+            if event.type == pg.KEYDOWN and event.key == pg.K_SPACE:
+                now = pg.time.get_ticks()
+                try:
+                    if now - self.last_update > self.frame_rate:
+                        if self.direction == 'down':
+                            self.game.player_img = self.game.playerattackdown[self.frame]
+                            self.frame += 1
+                            self.last_update = now
+                        if self.direction == 'up':
+                            self.game.player_img = self.game.playerattackup[self.frame]
+                            self.frame += 1
+                            self.last_update = now
+                        if self.direction == 'left':
+                            self.game.player_img = self.game.playerattackleft[self.frame]
+                            self.frame += 1
+                            self.last_update = now
+                        if self.direction == 'right':
+                            self.game.player_img = self.game.playerattackright[self.frame]
+                            self.frame += 1
+                            self.last_update = now
+                except IndexError:
+                    self.frame = 0
+        else:'''
             if self.direction == 'down':
                 self.game.player_img = self.game.walkdown[1]
             if self.direction == 'up':
@@ -130,6 +133,7 @@ class Player(pg.sprite.Sprite):
             if self.direction == 'left':
                 self.game.player_img = self.game.walkleft[1]
             #self.game.walk_sound.stop()
+            '''
         
 
     def collide_with_walls(self, dir):
