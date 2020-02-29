@@ -123,7 +123,14 @@ class Player(pg.sprite.Sprite):
             self.y = 1 * TILESIZE
         else:
             self.game.walk_sound.stop()
-        
+            if self.direction == 'down':
+                self.game.player_img = self.game.walkdown[1]
+            if self.direction == 'up':
+                self.game.player_img = self.game.walkup[1]
+            if self.direction == 'right':
+                self.game.player_img = self.game.walkright[1]
+            if self.direction == 'left':
+                self.game.player_img = self.game.walkleft[1]
 
     def collide_with_walls(self, dir):
         if dir == 'x':
