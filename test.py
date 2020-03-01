@@ -24,9 +24,8 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("My Game")
 clock = pygame.time.Clock()
 
-tmxdata = load_pygame('img/FirstMap.tmx')
-print(tmxdata.get_tile_properties(2, 0, 0)['Name'])
-print(tmxdata.height)
+txmdata = load_pygame('img/FirstMap.tmx')
+
 
 
 
@@ -41,13 +40,19 @@ while running:
         
     #update
     #Draw / Render
-    screen.fill(BLACK)
-    for i in range(50):
-        for b in range(50):
-            image = tmxdata.get_tile_image(b, i, 0)
-            image = pygame.transform.scale(image, (40, 40))
-            image.set_colorkey(BLACK)
-            screen.blit(image, (b*40, i*40))
+    
+    for x in range(0, 1):
+            for i in range(txmdata.height):
+                for b in range(txmdata.width):
+                    try:
+                        if txmdata.get_tile_properties(b, i, 1)['Type'] == 'Wall':
+                            screen.blit(txmdata.get_tile_image(b, i, x), b, i)
+                            #Wall(i, txmdata.get_tile_image(b, i, 1))
+                        elif txmdata.get_tile_properties(b, i, 1)['Type'] == 'Ground':
+                            screen.blit(txmdata.get_tile_image(b, i, x), b, i)
+                         #Ground(i, txmdata.get_tile_image(b, i, 1))
+                    except  TypeError:
+                        pass
 
     pygame.display.flip()
 

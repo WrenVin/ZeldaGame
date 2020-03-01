@@ -12,7 +12,7 @@ class Map:
         self.height = 16 * TILESIZE
     def get_tile_image(self, x, y, layer):
         img = self.txmdata.get_tile_image(x, y, layer)
-        img = pg.transform.scale(img, (16, 16))
+        img = pg.transform.scale(img, (8, 8))
         img.set_colorkey(BLACK)
         return img
             

@@ -34,8 +34,8 @@ class Game:
         self.playerspritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETPLAYER))
         self.worldspritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETWORLD))
         self.player_img = self.playerspritesheet.get_image(*PLAYER_IMG_NORMAL).convert()
-        self.wall_img = self.map.get_tile_image(0, 5, 0)
-        self.grass = self.map.get_tile_image(0, 0, 0)
+        #self.wall_img = self.map.get_tile_image(0, 5, 0)
+        #self.grass = self.map.get_tile_image(0, 0, 0)
         self.sword = pg.image.load((path.join(img_folder, 'sword.png'))).convert()
         self.walkdown1 = self.playerspritesheet.get_image(*WALKDOWN1).convert()
         self.walkdown2 = self.playerspritesheet.get_image(*WALKDOWN2).convert()
@@ -85,13 +85,16 @@ class Game:
         self.walls = pg.sprite.Group()
         self.ground = pg.sprite.Group()
         #self.swords = pg.sprite.Group()
-        for i in range(50):
-            for b in range(50):
-                if self.map.txmdata.get_tile_gid(b, i, 0) == 1:
-                    Ground(self, b, i)
-                elif self.map.txmdata.get_tile_gid(b, i, 0) == 40:
-                    Wall(self, b, i)
-                print(self.map.txmdata.get_tile_gid(b, i, 0))
+        for x in self.map.txmdata.visible_tile_layers:
+            for i in range(self.map.txmdata.height):
+                for b in range(self.map.txmdata.width):
+                    try:
+                        if self.map.txmdata.get_tile_properties(b, i, x)['Type'] == 'Wall':
+                            Wall(self, b, i, self.map.txmdata.get_tile_image(b, i, x))
+                        elif self.map.txmdata.get_tile_properties(b, i, x)['Type'] == 'Ground':
+                         Ground(self, b, i, self.map.txmdata.get_tile_image(b, i, x))
+                    except  TypeError:
+                        pass
         self.player = Player(self, 1, 1)
         self.camera = Camera(self.map.width, self.map.height)
     def run(self):
