@@ -172,7 +172,7 @@ class Game:
                     waiting = False
                     self.playing = False
             if keys[pg.K_1]:
-                self.gamemap = 'map.txt'
+                self.gamemap = 'EasyMap.txt'
                 waiting = False
             if keys[pg.K_2]:
                 self.gamemap = 'ModerateMap.txt'
