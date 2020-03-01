@@ -6,12 +6,15 @@ class Map:
     def __init__(self, filename):
         self.txmdata = load_pygame(filename)
 
-        self.tilewidth = 50
-        self.tilehieght = 50
+        self.tilewidth = self.txmdata.width
+        self.tilehieght = self.txmdata.height
         self.width = 16 * TILESIZE
         self.height = 16 * TILESIZE
     def get_tile_image(self, x, y, layer):
-        self.txmdata.get_tile_image(x, y, layer)
+        img = self.txmdata.get_tile_image(x, y, layer)
+        img = pg.transform.scale(img, (16, 16))
+        img.set_colorkey(BLACK)
+        return img
             
 class Camera:
     def __init__(self, width, height):

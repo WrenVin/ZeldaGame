@@ -84,14 +84,14 @@ class Game:
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
         self.ground = pg.sprite.Group()
-        self.swords = pg.sprite.Group()
+        #self.swords = pg.sprite.Group()
         for i in range(50):
             for b in range(50):
-                if self.map.txmdata.get_tile_properties(2, 0, 0)['Name'] == 'Grass':
+                if self.map.txmdata.get_tile_gid(b, i, 0) == 1:
                     Ground(self, b, i)
-                elif self.map.txmdata.get_tile_properties(2, 0, 0)['Name'] == 'Water':
+                elif self.map.txmdata.get_tile_gid(b, i, 0) == 40:
                     Wall(self, b, i)
-                
+                print(self.map.txmdata.get_tile_gid(b, i, 0))
         self.player = Player(self, 1, 1)
         self.camera = Camera(self.map.width, self.map.height)
     def run(self):
@@ -112,11 +112,6 @@ class Game:
         self.screen.fill(BLACK)
         self.player.update()
         self.camera.update(self.player)
-    def draw_grid(self):
-        for x in range(0, WIDTH, TILESIZE):
-            pg.draw.line(self.screen, LIGHTGREY, (x, 0), (x, HEIGHT))
-        for y in range(0, HEIGHT, TILESIZE):
-            pg.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
 
     def draw(self):
         #self.screen.fill(BGCOLOR)
@@ -135,8 +130,8 @@ class Game:
             if event.type == pg.VIDEORESIZE:
                 self.screen = pg.display.set_mode((event.w, event.h), pg.RESIZABLE)
                 
-        if len(self.swords) == 0:
-            self.playing = False
+       # if len(self.swords) == 0:
+          #  self.playing = False
         
     def draw_text(self, text, size, color, x, y):
         font = pg.font.Font(self.font_name, size)

@@ -152,10 +152,9 @@ class Player(pg.sprite.Sprite):
                 self.vy = 0
                 self.rect.y = self.y
         
-        hits = pg.sprite.spritecollide(self, self.game.swords, True)
-        if hits:
-            self.game.show_go_screen()
-       
+        #hits = pg.sprite.spritecollide(self, self.game.swords, True)
+       #if hits:
+           # self.game.show_go_screen()
 
     def update(self):
         self.get_keys()
@@ -196,7 +195,7 @@ class Ground(pg.sprite.Sprite):
         self.y = y
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
-        
+'''        
 class Sword(pg.sprite.Sprite):
     def __init__(self, game, x, y):
         self.groups = game.all_sprites, game.swords
@@ -210,3 +209,4 @@ class Sword(pg.sprite.Sprite):
         self.y = y
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
+'''
