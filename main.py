@@ -93,7 +93,7 @@ class Game:
                             Wall(self, b, i, self.map.txmdata.get_tile_image(b, i, x))
                         elif self.map.txmdata.get_tile_properties(b, i, x)['Type'] == 'Ground':
                          Ground(self, b, i, self.map.txmdata.get_tile_image(b, i, x))
-                    except  TypeError:
+                    except  Exception:
                         pass
         self.player = Player(self, 1, 1)
         self.camera = Camera(self.map.width, self.map.height)

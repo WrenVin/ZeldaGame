@@ -8,8 +8,8 @@ class Map:
 
         self.tilewidth = self.txmdata.width
         self.tilehieght = self.txmdata.height
-        self.width = 16 * TILESIZE
-        self.height = 16 * TILESIZE
+        self.width = self.tilewidth * TILESIZE
+        self.height = self.tilehieght * TILESIZE
     def get_tile_image(self, x, y, layer):
         img = self.txmdata.get_tile_image(x, y, layer)
         img = pg.transform.scale(img, (8, 8))
