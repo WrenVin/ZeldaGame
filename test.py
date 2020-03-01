@@ -23,7 +23,9 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 #pygame.display.toggle_fullscreen()
 pygame.display.set_caption("My Game")
 clock = pygame.time.Clock()
-tmxdata = load_pygame("img\FirstMap.tmx")
+
+tmxdata = load_pygame('img/FirstMap.tmx')
+print(tmxdata.get_tile_properties(2, 0, 0)['Name'])
 #print(tmxdata.get_tile_properties(0, 0, 0))
 
 

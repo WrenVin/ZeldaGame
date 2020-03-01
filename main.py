@@ -4,7 +4,7 @@ from os import path
 from settings import *
 from sprites import *
 from tilemap import *
-from pytmx import load_pygame, TiledTileLayer
+
 
 class Game:
     def __init__(self):
@@ -14,13 +14,12 @@ class Game:
         self.clock = pg.time.Clock()
         #pg.key.set_repeat(1, 20)
         self.font_name = pg.font.match_font(FONT_NAME)
-        self.gamemap = 'None'
+        self.gamemap = 'img/FirstMap.tmx'
         #self.load_data()
         
 
 
     def load_data(self):
-        self.map = load_pygame("img\FirstMap.tmx")
         game_folder = path.dirname(__file__)
         img_folder = path.join(game_folder, 'img')
         snd_folder = path.join(game_folder, 'snd')
@@ -31,12 +30,12 @@ class Game:
         self.victory_sound.set_volume(0.5)
         pg.mixer.music.set_volume(0.15)
         pg.mixer.music.play(-1, 0) 
-        #self.map = Map(path.join(game_folder, self.gamemap))
+        self.map = Map(path.join(img_folder, self.gamemap))
         self.playerspritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETPLAYER))
         self.worldspritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETWORLD))
         self.player_img = self.playerspritesheet.get_image(*PLAYER_IMG_NORMAL).convert()
-        self.wall_img = self.worldspritesheet.get_image(*BORDER).convert()
-        self.grass = pg.image.load((path.join(img_folder, 'grass.png'))).convert()
+        self.wall_img = self.map.get_tile_image(0, 5, 0)
+        self.grass = self.map.get_tile_image(0, 0, 0)
         self.sword = pg.image.load((path.join(img_folder, 'sword.png'))).convert()
         self.walkdown1 = self.playerspritesheet.get_image(*WALKDOWN1).convert()
         self.walkdown2 = self.playerspritesheet.get_image(*WALKDOWN2).convert()
@@ -86,12 +85,12 @@ class Game:
         self.walls = pg.sprite.Group()
         self.ground = pg.sprite.Group()
         self.swords = pg.sprite.Group()
-        for self.i in range(50):
-            for self.b in range(50):
-                self.image = self.map.get_tile_image(self.b, self.i, 0)
-                self.image = pg.transform.scale(self.image, (TILESIZE, TILESIZE))
-                self.image.set_colorkey(BLACK)
-                self.screen.blit(self.image, (self.b*TILESIZE, self.i*TILESIZE))
+        for i in range(50):
+            for b in range(50):
+                if self.map.txmdata.get_tile_properties(2, 0, 0)['Name'] == 'Grass':
+                    Ground(self, b, i)
+                elif self.map.txmdata.get_tile_properties(2, 0, 0)['Name'] == 'Water':
+                    Wall(self, b, i)
                 
         self.player = Player(self, 1, 1)
         self.camera = Camera(self.map.width, self.map.height)
@@ -113,7 +112,6 @@ class Game:
         self.screen.fill(BLACK)
         self.player.update()
         self.camera.update(self.player)
-        self.check_for_new_map()
     def draw_grid(self):
         for x in range(0, WIDTH, TILESIZE):
             pg.draw.line(self.screen, LIGHTGREY, (x, 0), (x, HEIGHT))
@@ -125,12 +123,7 @@ class Game:
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
         pg.display.update()
-        
-    def check_for_new_map(self):
-        if self.player.x/TILESIZE > 10:
-            self.gamemap = 'map2.txt'
-            self.new()
-        
+
     def events(self):
         # catch all events here
         for event in pg.event.get():
@@ -170,6 +163,13 @@ class Game:
                     waiting = False
                     self.playing = False
             if keys[pg.K_1]:
+                self.gamemap = 'FirstMap.tmx'
+                waiting = False
+            if keys[pg.K_2]:
+                self.gamemap = 'ModerateMap.txt'
+                waiting = False
+            if keys[pg.K_3]:
+                self.gamemap = 'HardMap.txt'
                 waiting = False
                            
     def show_go_screen(self):
