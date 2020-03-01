@@ -4,7 +4,7 @@ from os import path
 from settings import *
 from sprites import *
 from tilemap import *
-
+from pytmx import load_pygame, TiledTileLayer
 
 class Game:
     def __init__(self):
@@ -20,6 +20,7 @@ class Game:
 
 
     def load_data(self):
+        self.map = load_pygame("img\FirstMap.tmx")
         game_folder = path.dirname(__file__)
         img_folder = path.join(game_folder, 'img')
         snd_folder = path.join(game_folder, 'snd')
@@ -30,7 +31,7 @@ class Game:
         self.victory_sound.set_volume(0.5)
         pg.mixer.music.set_volume(0.15)
         pg.mixer.music.play(-1, 0) 
-        self.map = Map(path.join(game_folder, self.gamemap))
+        #self.map = Map(path.join(game_folder, self.gamemap))
         self.playerspritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETPLAYER))
         self.worldspritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETWORLD))
         self.player_img = self.playerspritesheet.get_image(*PLAYER_IMG_NORMAL).convert()
@@ -85,15 +86,12 @@ class Game:
         self.walls = pg.sprite.Group()
         self.ground = pg.sprite.Group()
         self.swords = pg.sprite.Group()
-        for row, tiles in enumerate(self.map.data):
-            for col, tile in enumerate(tiles.strip()):
-                if tile == '+' or tile == '-' or tile == '|':
-                    Wall(self, col, row)
-                elif tile == ' ':
-                    Ground(self, col, row)
-                elif tile == 'A':
-                    Ground(self, col, row)
-                    Sword(self, col-0.5, row)
+        for self.i in range(50):
+            for self.b in range(50):
+                self.image = self.map.get_tile_image(self.b, self.i, 0)
+                self.image = pg.transform.scale(self.image, (TILESIZE, TILESIZE))
+                self.image.set_colorkey(BLACK)
+                self.screen.blit(self.image, (self.b*TILESIZE, self.i*TILESIZE))
                 
         self.player = Player(self, 1, 1)
         self.camera = Camera(self.map.width, self.map.height)
@@ -172,13 +170,6 @@ class Game:
                     waiting = False
                     self.playing = False
             if keys[pg.K_1]:
-                self.gamemap = 'EasyMap.txt'
-                waiting = False
-            if keys[pg.K_2]:
-                self.gamemap = 'ModerateMap.txt'
-                waiting = False
-            if keys[pg.K_3]:
-                self.gamemap = 'HardMap.txt'
                 waiting = False
                            
     def show_go_screen(self):

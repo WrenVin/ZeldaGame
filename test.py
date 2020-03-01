@@ -9,8 +9,8 @@ from pytmx import load_pygame, TiledTileLayer
 
 
 
-
-
+TILESIZE = 40
+ANIMATIONSPEED = 150
 #SIZE = (500, 500)
 
 BLACK = (0, 0, 0)
@@ -24,6 +24,9 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("My Game")
 clock = pygame.time.Clock()
 tmxdata = load_pygame("img\FirstMap.tmx")
+#print(tmxdata.get_tile_properties(0, 0, 0))
+
+
 
 #Game Loop
 running = True
@@ -40,9 +43,9 @@ while running:
     for i in range(50):
         for b in range(50):
             image = tmxdata.get_tile_image(b, i, 0)
-            #image = pygame.transform.scale(image, (40, 40))
+            image = pygame.transform.scale(image, (40, 40))
             image.set_colorkey(BLACK)
-            screen.blit(image, (b*16, i*16))
+            screen.blit(image, (b*40, i*40))
 
     pygame.display.flip()
 
