@@ -14,7 +14,7 @@ class Game:
         self.clock = pg.time.Clock()
         #pg.key.set_repeat(1, 20)
         self.font_name = pg.font.match_font(FONT_NAME)
-        self.gamemap = 'None'
+        self.gamemap = 'img/FirstMap.tmx'
         #self.load_data()
         
 
@@ -30,12 +30,12 @@ class Game:
         self.victory_sound.set_volume(0.5)
         pg.mixer.music.set_volume(0.15)
         pg.mixer.music.play(-1, 0) 
-        self.map = Map(path.join(game_folder, self.gamemap))
+        self.map = Map(path.join(img_folder, self.gamemap))
         self.playerspritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETPLAYER))
         self.worldspritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETWORLD))
         self.player_img = self.playerspritesheet.get_image(*PLAYER_IMG_NORMAL).convert()
-        self.wall_img = self.worldspritesheet.get_image(*BORDER).convert()
-        self.grass = pg.image.load((path.join(img_folder, 'grass.png'))).convert()
+        #self.wall_img = self.map.get_tile_image(0, 5, 0)
+        #self.grass = self.map.get_tile_image(0, 0, 0)
         self.sword = pg.image.load((path.join(img_folder, 'sword.png'))).convert()
         self.walkdown1 = self.playerspritesheet.get_image(*WALKDOWN1).convert()
         self.walkdown2 = self.playerspritesheet.get_image(*WALKDOWN2).convert()
@@ -84,17 +84,17 @@ class Game:
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
         self.ground = pg.sprite.Group()
-        self.swords = pg.sprite.Group()
-        for row, tiles in enumerate(self.map.data):
-            for col, tile in enumerate(tiles.strip()):
-                if tile == '+' or tile == '-' or tile == '|':
-                    Wall(self, col, row)
-                elif tile == ' ':
-                    Ground(self, col, row)
-                elif tile == 'A':
-                    Ground(self, col, row)
-                    Sword(self, col-0.5, row)
-                
+        #self.swords = pg.sprite.Group()
+        for x in self.map.txmdata.visible_tile_layers:
+            for i in range(self.map.txmdata.height):
+                for b in range(self.map.txmdata.width):
+                    try:
+                        if self.map.txmdata.get_tile_properties(b, i, x)['Type'] == 'Wall':
+                            Wall(self, b, i, self.map.txmdata.get_tile_image(b, i, x))
+                        elif self.map.txmdata.get_tile_properties(b, i, x)['Type'] == 'Ground':
+                         Ground(self, b, i, self.map.txmdata.get_tile_image(b, i, x))
+                    except  Exception:
+                        pass
         self.player = Player(self, 1, 1)
         self.camera = Camera(self.map.width, self.map.height)
     def run(self):
@@ -115,24 +115,13 @@ class Game:
         self.screen.fill(BLACK)
         self.player.update()
         self.camera.update(self.player)
-        self.check_for_new_map()
-    def draw_grid(self):
-        for x in range(0, WIDTH, TILESIZE):
-            pg.draw.line(self.screen, LIGHTGREY, (x, 0), (x, HEIGHT))
-        for y in range(0, HEIGHT, TILESIZE):
-            pg.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
 
     def draw(self):
         #self.screen.fill(BGCOLOR)
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
         pg.display.update()
-        
-    def check_for_new_map(self):
-        if self.player.x/TILESIZE > 10:
-            self.gamemap = 'map2.txt'
-            self.new()
-        
+
     def events(self):
         # catch all events here
         for event in pg.event.get():
@@ -144,8 +133,8 @@ class Game:
             if event.type == pg.VIDEORESIZE:
                 self.screen = pg.display.set_mode((event.w, event.h), pg.RESIZABLE)
                 
-        if len(self.swords) == 0:
-            self.playing = False
+       # if len(self.swords) == 0:
+          #  self.playing = False
         
     def draw_text(self, text, size, color, x, y):
         font = pg.font.Font(self.font_name, size)
@@ -172,7 +161,7 @@ class Game:
                     waiting = False
                     self.playing = False
             if keys[pg.K_1]:
-                self.gamemap = 'EasyMap.txt'
+                self.gamemap = 'FirstMap.tmx'
                 waiting = False
             if keys[pg.K_2]:
                 self.gamemap = 'ModerateMap.txt'
