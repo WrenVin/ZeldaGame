@@ -95,7 +95,7 @@ class Game:
                          Ground(self, b, i, self.map.txmdata.get_tile_image(b, i, x))
                     except  Exception:
                         pass
-        self.player = Player(self, 1, 1)
+        self.player = Player(self, 8, 8)
         self.camera = Camera(self.map.width, self.map.height)
     def run(self):
         # game loop - set self.playing = False to end the game
