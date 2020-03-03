@@ -86,6 +86,8 @@ class Game:
         self.ground = pg.sprite.Group()
         #self.swords = pg.sprite.Group()
         for x in self.map.txmdata.visible_tile_layers:
+            if x == 6:
+                self.player = Player(self, 8, 8)
             for i in range(self.map.txmdata.height):
                 for b in range(self.map.txmdata.width):
                     try:
@@ -95,7 +97,7 @@ class Game:
                          Ground(self, b, i, self.map.txmdata.get_tile_image(b, i, x))
                     except  Exception:
                         pass
-        self.player = Player(self, 8, 8)
+        #self.player = Player(self, 8, 8)
         self.camera = Camera(self.map.width, self.map.height)
     def run(self):
         # game loop - set self.playing = False to end the game

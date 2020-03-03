@@ -16,6 +16,11 @@
    <property name="Type" value="Wall"/>
   </properties>
  </tile>
+ <tile id="148">
+  <properties>
+   <property name="Type" value="Ground"/>
+  </properties>
+ </tile>
  <tile id="154">
   <properties>
    <property name="Type" value="Wall"/>

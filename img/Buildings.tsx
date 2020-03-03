@@ -166,6 +166,46 @@
    <property name="Type" value="Ground"/>
   </properties>
  </tile>
+ <tile id="231">
+  <properties>
+   <property name="Type" value="Ground"/>
+  </properties>
+ </tile>
+ <tile id="232">
+  <properties>
+   <property name="Type" value="Ground"/>
+  </properties>
+ </tile>
+ <tile id="233">
+  <properties>
+   <property name="Type" value="Ground"/>
+  </properties>
+ </tile>
+ <tile id="234">
+  <properties>
+   <property name="Type" value="Ground"/>
+  </properties>
+ </tile>
+ <tile id="271">
+  <properties>
+   <property name="Type" value="Ground"/>
+  </properties>
+ </tile>
+ <tile id="272">
+  <properties>
+   <property name="Type" value="Ground"/>
+  </properties>
+ </tile>
+ <tile id="273">
+  <properties>
+   <property name="Type" value="Ground"/>
+  </properties>
+ </tile>
+ <tile id="274">
+  <properties>
+   <property name="Type" value="Ground"/>
+  </properties>
+ </tile>
  <tile id="1139">
   <properties>
    <property name="Type" value="Wall"/>
