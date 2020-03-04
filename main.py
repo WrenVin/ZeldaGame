@@ -4,7 +4,7 @@ from os import path
 from settings import *
 from sprites import *
 from tilemap import *
-
+from pytmx import TiledObjectGroup
 
 class Game:
     def __init__(self):
@@ -85,17 +85,22 @@ class Game:
         self.walls = pg.sprite.Group()
         self.ground = pg.sprite.Group()
         #self.swords = pg.sprite.Group()
-        for x in self.map.txmdata.visible_tile_layers:
-            for i in range(self.map.txmdata.height):
-                for b in range(self.map.txmdata.width):
-                    try:
-                        if self.map.txmdata.get_tile_properties(b, i, x)['Type'] == 'Wall':
-                            Wall(self, b, i, self.map.txmdata.get_tile_image(b, i, x))
-                        elif self.map.txmdata.get_tile_properties(b, i, x)['Type'] == 'Ground':
-                         Ground(self, b, i, self.map.txmdata.get_tile_image(b, i, x))
-                    except  Exception:
-                        pass
-        self.player = Player(self, 1, 1)
+        layer_index = 0
+        for layer in self.map.txmdata.visible_layers:
+            if isinstance(layer, TiledTileLayer):
+                if layer_index == 6:
+                    self.player = Player(self, 4, 4)
+                for i in range(self.map.txmdata.height):
+                    for b in range(self.map.txmdata.width):
+                        if self.map.txmdata.get_tile_image(b, i, layer_index):
+                            #print(self.map.txmdata.get_tile_image(b, i, x),b, i, x)
+                            MapTile(self, b, i, self.map.txmdata.get_tile_image(b, i,layer_index))
+            layer_index += 1
+
+            if isinstance(layer, TiledObjectGroup):
+                for obj in layer:
+                    Obstacle(self, obj.x, obj.y, obj.width, obj.height)
+        #self.player = Player(self, 8, 8)
         self.camera = Camera(self.map.width, self.map.height)
     def run(self):
         # game loop - set self.playing = False to end the game
