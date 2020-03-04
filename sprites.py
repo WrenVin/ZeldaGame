@@ -130,10 +130,9 @@ class Player(pg.sprite.Sprite):
             if self.direction == 'left':
                 self.game.player_img = self.game.walkleft[1]
 
-    def collide_with_walls(self, obj):
-            hits = pg.Rect(obj.x, obj.y, obj.width, obj.height).colliderect(self.rect)
-            print(hits)
-            '''
+    def collide_with_walls(self, dir):
+        if dir == 'x':
+            hits = pg.sprite.spritecollide(self, self.game.walls, False)
             if hits:
                 if self.vx > 0:
                     self.x = hits[0].rect.left - self.rect.width
@@ -141,16 +140,16 @@ class Player(pg.sprite.Sprite):
                     self.x = hits[0].rect.right
                 self.vx = 0
                 self.rect.x = self.x
+        if dir == 'y':
+            hits = pg.sprite.spritecollide(self, self.game.walls, False)
+            if hits:
                 if self.vy > 0:
                     self.y = hits[0].rect.top - self.rect.height
                 if self.vy < 0:
                     self.y = hits[0].rect.bottom
                 self.vy = 0
-                self.rect.y = self.y'''
+                self.rect.y = self.y
         
-        #hits = pg.sprite.spritecollide(self, self.game.swords, True)
-       #if hits:
-           # self.game.show_go_screen()
 
     def update(self):
         self.get_keys()
@@ -158,9 +157,9 @@ class Player(pg.sprite.Sprite):
         self.x += self.vx * self.game.dt
         self.y += self.vy * self.game.dt
         self.rect.x = self.x
+        self.collide_with_walls('x')
         self.rect.y = self.y
-        for obj in self.game.walls:
-            self.collide_with_walls(obj)
+        self.collide_with_walls('y')
 
 
 class MapTile(pg.sprite.Sprite):
@@ -176,6 +175,19 @@ class MapTile(pg.sprite.Sprite):
         self.y = y
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
+        
+class Obstacle(pg.sprite.Sprite):
+    def __init__(self, game, x, y, w, h):
+        self.x = x*2.5
+        self.y = y*2.5
+        self.w = w*2.5
+        self.h = h*2.5
+        self.groups = game.walls
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.rect = pg.Rect(self.x, self.y, self.w, self.h)
+        self.rect.x = self.x 
+        self.rect.y = self.y 
 '''        
 class Sword(pg.sprite.Sprite):
     def __init__(self, game, x, y):

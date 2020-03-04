@@ -98,7 +98,8 @@ class Game:
             layer_index += 1
 
             if isinstance(layer, TiledObjectGroup):
-                self.walls = layer
+                for obj in layer:
+                    Obstacle(self, obj.x, obj.y, obj.width, obj.height)
         #self.player = Player(self, 8, 8)
         self.camera = Camera(self.map.width, self.map.height)
     def run(self):
