@@ -25,8 +25,6 @@ class SpriteSheet:
     
 class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y):
-        self.x = x
-        self.y = y
         self.game = game
         self.groups = game.all_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
@@ -34,8 +32,8 @@ class Player(pg.sprite.Sprite):
         self.image = game.player_img
         self.rect = self.image.get_rect()
         self.vx, self.vy = 0, 0
-        self.x = x * TILESIZE
-        self.y = y * TILESIZE
+        self.x = x * 16
+        self.y = y * 16
         self.last_update = pg.time.get_ticks()
         self.frame = 0
         self.frame_rate = ANIMATIONSPEED
@@ -152,10 +150,6 @@ class Player(pg.sprite.Sprite):
                 self.vy = 0
                 self.rect.y = self.y
         
-        hits = pg.sprite.spritecollide(self, self.game.swords, True)
-        if hits:
-            self.game.show_go_screen()
-       
 
     def update(self):
         self.get_keys()
@@ -168,34 +162,33 @@ class Player(pg.sprite.Sprite):
         self.collide_with_walls('y')
 
 
-
-
-class Wall(pg.sprite.Sprite):
-    def __init__(self, game, x, y):
-        self.groups = game.all_sprites, game.walls
-        pg.sprite.Sprite.__init__(self, self.groups)
-        self.game = game
-        self.image = game.wall_img
-        self.image = pg.transform.scale(self.image, (TILESIZE, TILESIZE))
-        self.rect = self.image.get_rect()
-        self.x = x
-        self.y = y
-        self.rect.x = x * TILESIZE
-        self.rect.y = y * TILESIZE
-
-class Ground(pg.sprite.Sprite):
-    def __init__(self, game, x, y):
+class MapTile(pg.sprite.Sprite):
+    def __init__(self, game, x, y, img):
         self.groups = game.all_sprites, game.ground
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = self.game.grass
+        self.image = img
         self.image = pg.transform.scale(self.image, (TILESIZE, TILESIZE))
+        self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
         
+class Obstacle(pg.sprite.Sprite):
+    def __init__(self, game, x, y, w, h):
+        self.x = x*2.5
+        self.y = y*2.5
+        self.w = w*2.5
+        self.h = h*2.5
+        self.groups = game.walls
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.rect = pg.Rect(self.x, self.y, self.w, self.h)
+        self.rect.x = self.x 
+        self.rect.y = self.y 
+'''        
 class Sword(pg.sprite.Sprite):
     def __init__(self, game, x, y):
         self.groups = game.all_sprites, game.swords
@@ -209,3 +202,4 @@ class Sword(pg.sprite.Sprite):
         self.y = y
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
+'''

@@ -1,21 +1,21 @@
 import pygame as pg
 from settings import *
 from os import path
-
+from pytmx import load_pygame, TiledTileLayer
 class Map:
     def __init__(self, filename):
-        game_folder = path.dirname(__file__)
-        self.data = []
-        with open (path.join(game_folder, filename), 'rt') as f:
-            for line in f:
-                self.data.append(line.strip())
+        self.txmdata = load_pygame(filename)
 
-        self.tilewidth = len(self.data[0])
-        self.tilehieght = len(self.data)
+        self.tilewidth = self.txmdata.width
+        self.tilehieght = self.txmdata.height
         self.width = self.tilewidth * TILESIZE
         self.height = self.tilehieght * TILESIZE
-        
-        
+    def get_tile_image(self, x, y, layer):
+        img = self.txmdata.get_tile_image(x, y, layer)
+        img = pg.transform.scale(img, (8, 8))
+        img.set_colorkey(BLACK)
+        return img
+            
 class Camera:
     def __init__(self, width, height):
         self.camera = pg.Rect(0, 0, width,height)
