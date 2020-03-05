@@ -88,7 +88,7 @@ class Game:
         layer_index = 0
         for layer in self.map.txmdata.visible_layers:
             if isinstance(layer, TiledTileLayer):
-                if layer_index == 6:
+                if layer.name == "PlayerLayer":
                     self.player = Player(self, 4, 4)
                 for i in range(self.map.txmdata.height):
                     for b in range(self.map.txmdata.width):
