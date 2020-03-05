@@ -5,6 +5,8 @@ from settings import *
 from sprites import *
 from tilemap import *
 from pytmx import TiledObjectGroup
+from platform import system
+
 
 class Game:
     def __init__(self):
@@ -23,13 +25,14 @@ class Game:
         game_folder = path.dirname(__file__)
         img_folder = path.join(game_folder, 'img')
         snd_folder = path.join(game_folder, 'snd')
-        pg.mixer.music.load(path.join(snd_folder, 'background.mp3')) 
+        if system() != 'Darwin':
+            pg.mixer.music.load(path.join(snd_folder, 'background.mp3'))
+            pg.mixer.music.set_volume(0.15)
+            pg.mixer.music.play(-1, 0) 
         self.walk_sound = pg.mixer.Sound('snd/walk.mp3')
         self.victory_sound = pg.mixer.Sound('snd/victory.mp3')
         self.walk_sound.set_volume(0.03)
-        self.victory_sound.set_volume(0.5)
-        pg.mixer.music.set_volume(0.15)
-        pg.mixer.music.play(-1, 0) 
+        self.victory_sound.set_volume(0.5) 
         self.map = Map(path.join(img_folder, self.gamemap))
         self.playerspritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETPLAYER))
         self.worldspritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETWORLD))
@@ -176,9 +179,10 @@ class Game:
                 waiting = False
                            
     def show_go_screen(self):
-        pg.mixer.music.fadeout(2000)
+        if system() != 'Darwin':
+            pg.mixer.music.fadeout(2000)
+            pg.mixer.music.stop()
         self.walk_sound.stop()
-        pg.mixer.music.stop()
         self.walk_sound.stop()
         self.screen.fill(ORANGE)
         self.draw_text("You found the Sword!!", 36, WHITE, WIDTH/2, HEIGHT/3)
