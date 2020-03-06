@@ -38,7 +38,7 @@ class Player(pg.sprite.Sprite):
         self.frame = 0
         self.frame_rate = ANIMATIONSPEED
         self.direction = 'down'
-        self.swing = False
+        self.attack = False
         self.centerrect = 0
 
     def get_keys(self):
@@ -98,28 +98,10 @@ class Player(pg.sprite.Sprite):
                     self.frame = 0
             self.swing = False
         elif keys[pg.K_SPACE]:
-            self.swing = True
-            now = pg.time.get_ticks()
-            try:
-                if now - self.last_update > self.frame_rate:
-                    if self.direction == 'down':
-                        self.game.player_img = self.game.playerattackdown[self.frame]
-                        self.frame += 1
-                        self.last_update = now
-                    if self.direction == 'up':
-                        self.game.player_img = self.game.playerattackup[self.frame]
-                        self.frame += 1
-                        self.last_update = now
-                    if self.direction == 'left':
-                        self.game.player_img = self.game.playerattackleft[self.frame]
-                        self.frame += 1
-                        self.last_update = now
-                    if self.direction == 'right':
-                        self.game.player_img = self.game.playerattackright[self.frame]
-                        self.frame += 1
-                        self.last_update = now
-            except IndexError:
-                self.frame = 0
+            self.attack = True
+            if self.direction == 'down':
+                print(self.rect.centery)
+                self.sword = Sword(self.game, self.rect.centerx-7, self.rect.bottom, self)
         elif self.vx != 0 and self.vy != 0:
             self.vx *= 0.7071
             self.vy *= 0.7071
@@ -128,6 +110,10 @@ class Player(pg.sprite.Sprite):
             self.x = 1 * TILESIZE
             self.y = 1 * TILESIZE
             self.swing = False
+        elif self.attack and not keys[pg.K_SPACE]:
+            self.sword.update()
+            self.sword = None
+            self.attack = False
         else:
             self.game.walk_sound.stop()
             if self.direction == 'down':
@@ -160,11 +146,13 @@ class Player(pg.sprite.Sprite):
                     self.y = hits[0].rect.bottom
                 self.vy = 0
                 self.rect.y = self.y
+                
         
 
     def update(self):
         self.get_keys()
         self.image = self.game.player_img
+        self.image.set_colorkey(BLACK)
         self.x += self.vx * self.game.dt
         self.y += self.vy * self.game.dt
         self.rect.x = self.x
@@ -174,9 +162,6 @@ class Player(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = self.x
         self.rect.y = self.y
-        if self.swing:
-            if self.direction == 'left':
-                self.rect.right = self.centerrect
 
 
 class MapTile(pg.sprite.Sprite):
@@ -192,6 +177,25 @@ class MapTile(pg.sprite.Sprite):
         self.y = y
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
+        
+class Sword(pg.sprite.Sprite):
+    def __init__(self, game, x, y, entity):
+        self.groups = game.all_sprites
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = self.game.sword
+        #self.image = pg.transform.scale(self.image, (TILESIZE, TILESIZE))
+        self.image.set_colorkey(WHITE)
+        self.rect = self.image.get_rect()
+        self.x = x
+        self.y = y
+        self.rect.x = x 
+        self.rect.y = y 
+        if entity.direction == 'down':
+            self.image = pg.transform.rotate(self.image, -90)
+            
+        def update(self):
+            self.kill()
         
 class Obstacle(pg.sprite.Sprite):
     def __init__(self, game, x, y, w, h):
