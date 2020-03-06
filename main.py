@@ -17,6 +17,7 @@ class Game:
         #pg.key.set_repeat(1, 20)
         self.font_name = pg.font.match_font(FONT_NAME)
         self.gamemap = 'img/FirstMap.tmx'
+        self.attack = False
         #self.load_data()
         
 
@@ -36,10 +37,14 @@ class Game:
         self.map = Map(path.join(img_folder, self.gamemap))
         self.playerspritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETPLAYER))
         self.worldspritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETWORLD))
+        self.swordspritesheet = SpriteSheet(path.join(img_folder, 'sword.png'))
         self.player_img = self.playerspritesheet.get_image(*PLAYER_IMG_NORMAL).convert()
         #self.wall_img = self.map.get_tile_image(0, 5, 0)
         #self.grass = self.map.get_tile_image(0, 0, 0)
-        self.sword = pg.image.load((path.join(img_folder, 'sword.png'))).convert()
+        self.woodensword = self.swordspritesheet.get_image(*WOODEN_SWORD).convert()
+        self.metalsword = self.swordspritesheet.get_image(*METAL_SWORD).convert()
+        self.epicsword = self.swordspritesheet.get_image(*EPIC_SWORD).convert()
+        self.sword = self.woodensword
         self.walkdown1 = self.playerspritesheet.get_image(*WALKDOWN1).convert()
         self.walkdown2 = self.playerspritesheet.get_image(*WALKDOWN2).convert()
         self.walkdown3 = self.playerspritesheet.get_image(*WALKDOWN3).convert()
@@ -87,7 +92,7 @@ class Game:
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
         self.ground = pg.sprite.Group()
-        #self.swords = pg.sprite.Group()
+        self.swords = pg.sprite.Group()
         layer_index = 0
         for layer in self.map.txmdata.visible_layers:
             if isinstance(layer, TiledTileLayer):
@@ -125,7 +130,6 @@ class Game:
         self.camera.update(self.player)
 
     def draw(self):
-        #self.screen.fill(BGCOLOR)
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
         pg.display.update()
@@ -136,8 +140,33 @@ class Game:
             if event.type == pg.QUIT:
                 self.quit()
             if event.type == pg.KEYDOWN:
-                if event.key == pg.K_ESCAPE:
-                    self.quit()
+                if event.key == pg.K_SPACE and not self.attack:
+                    self.attack = True
+                    if self.player.direction == 'down':
+                        self.playersword = Sword(self, self.player.rect.centerx+2, self.player.rect.bottom-11, self.player, -90)
+                        self.player_img = self.attackdown4
+                    if self.player.direction == 'left':
+                        self.playersword = Sword(self, self.player.rect.x-27, self.player.rect.y+20, self.player, -180)
+                        self.player_img = self.attackleft2
+                    if self.player.direction == 'up':
+                        self.playersword = Sword(self, self.player.rect.centerx-9, self.player.rect.top-26, self.player, -270)
+                        self.player_img = self.walkup2 
+                    if self.player.direction == 'right':
+                        self.playersword = Sword(self, self.player.rect.right-6, self.player.rect.centery-2, self.player, -0)
+                        self.player_img = self.attackright2
+                    if  pg.sprite.spritecollide(self.playersword, self.walls, False):
+                        self.playersword.kill()
+                        self.attack = False
+                if event.key == pg.K_5:
+                    self.sword = self.metalsword
+                if event.key == pg.K_4:
+                    self.sword = self.woodensword
+                if event.key == pg.K_6:
+                    self.sword = self.epicsword
+            if event.type == pg.KEYUP and self.attack:
+                if event.key == pg.K_SPACE:
+                    self.playersword.kill()
+                    self.attack = False
             if event.type == pg.VIDEORESIZE:
                 self.screen = pg.display.set_mode((event.w, event.h), pg.RESIZABLE)
                 
@@ -160,7 +189,8 @@ class Game:
         self.wait_for_key()
         
     def wait_for_key(self):
-        waiting = True
+        self.gamemap = 'FirstMap.tmx'
+        waiting = False
         while waiting:
             keys = pg.key.get_pressed()
             self.clock.tick(FPS)
@@ -169,7 +199,7 @@ class Game:
                     waiting = False
                     self.playing = False
             if keys[pg.K_1]:
-                self.gamemap = 'FirstMap.tmx'
+                pass
                 waiting = False
             if keys[pg.K_2]:
                 self.gamemap = 'ModerateMap.txt'
