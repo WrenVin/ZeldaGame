@@ -128,6 +128,7 @@ class Game:
     def draw(self):
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
+        print(self.all_sprites)
         pg.display.update()
 
     def events(self):
@@ -135,9 +136,7 @@ class Game:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.quit()
-            if event.type == pg.KEYDOWN:
-                if event.key == pg.K_ESCAPE:
-                    self.quit()
+            #        self.playersword.kill()
             if event.type == pg.VIDEORESIZE:
                 self.screen = pg.display.set_mode((event.w, event.h), pg.RESIZABLE)
                 

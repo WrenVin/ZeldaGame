@@ -98,10 +98,9 @@ class Player(pg.sprite.Sprite):
                     self.frame = 0
             self.swing = False
         elif keys[pg.K_SPACE]:
-            self.attack = True
+            self.attck = True
             if self.direction == 'down':
-                print(self.rect.centery)
-                self.sword = Sword(self.game, self.rect.centerx-7, self.rect.bottom, self)
+                self.playersword = Sword(self.game, self.rect.centerx-7, self.rect.bottom, self, -90)
         elif self.vx != 0 and self.vy != 0:
             self.vx *= 0.7071
             self.vy *= 0.7071
@@ -111,9 +110,8 @@ class Player(pg.sprite.Sprite):
             self.y = 1 * TILESIZE
             self.swing = False
         elif self.attack and not keys[pg.K_SPACE]:
-            self.sword.update()
-            self.sword = None
-            self.attack = False
+             self.playersword.kill()
+             self.attack = False
         else:
             self.game.walk_sound.stop()
             if self.direction == 'down':
@@ -184,18 +182,16 @@ class Sword(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.image = self.game.sword
-        #self.image = pg.transform.scale(self.image, (TILESIZE, TILESIZE))
         self.image.set_colorkey(WHITE)
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y
         self.rect.x = x 
         self.rect.y = y 
-        if entity.direction == 'down':
-            self.image = pg.transform.rotate(self.image, -90)
+        self.image = pg.transform.rotate(self.image, rot)
             
         def update(self):
-            self.kill()
+            kill()
         
 class Obstacle(pg.sprite.Sprite):
     def __init__(self, game, x, y, w, h):
