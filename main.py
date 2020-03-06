@@ -17,6 +17,7 @@ class Game:
         #pg.key.set_repeat(1, 20)
         self.font_name = pg.font.match_font(FONT_NAME)
         self.gamemap = 'img/FirstMap.tmx'
+        self.attack = False
         #self.load_data()
         
 
@@ -128,7 +129,6 @@ class Game:
     def draw(self):
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
-        print(self.all_sprites)
         pg.display.update()
 
     def events(self):
@@ -136,7 +136,23 @@ class Game:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.quit()
-            #        self.playersword.kill()
+            if event.type == pg.KEYDOWN:
+                if event.key == pg.K_SPACE and not self.attack:
+                    self.attack = True
+                    if self.player.direction == 'down':
+                        self.playersword = Sword(self, self.player.rect.centerx+2, self.player.rect.bottom-11, self.player, -90)
+                        self.player_img = self.attackdown4
+                    if self.player.direction == 'left':
+                        self.playersword = Sword(self, self.player.rect.x-27, self.player.rect.y+20, self.player, -180)
+                        self.player_img = self.attackleft2
+                    if self.player.direction == 'up':
+                        self.playersword = Sword(self, self.player.rect.centerx-7, self.player.rect.bottom, self.player, -270)
+                    if self.player.direction == 'right':
+                        self.playersword = Sword(self, self.player.rect.centerx-7, self.player.rect.bottom, self.player, -0)
+            if event.type == pg.KEYUP and self.attack:
+                if event.key == pg.K_SPACE:
+                    self.playersword.kill()
+                    self.attack = False
             if event.type == pg.VIDEORESIZE:
                 self.screen = pg.display.set_mode((event.w, event.h), pg.RESIZABLE)
                 

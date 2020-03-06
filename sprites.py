@@ -43,87 +43,84 @@ class Player(pg.sprite.Sprite):
 
     def get_keys(self):
         self.vx, self.vy = 0, 0
-        keys = pg.key.get_pressed()
-        if keys[pg.K_LEFT] or keys[pg.K_a]:
-            self.game.walk_sound.play(-1)
-            now = pg.time.get_ticks()
-            self.vx = -200
-            self.direction = 'left'
-            if now - self.last_update > self.frame_rate:
-               self.last_update = now
-               try:
-                    self.game.player_img = self.game.walkleft[self.frame]
-                    self.frame += 1
-               except IndexError:
-                    self.frame = 0
-            self.swing = False
-        elif keys[pg.K_RIGHT] or keys[pg.K_d]:
-            self.game.walk_sound.play(-1)
-            now = pg.time.get_ticks()
-            self.vx = 200
-            self.direction = 'right'
-            if now - self.last_update > self.frame_rate:
-               self.last_update = now
-               try:
-                    self.game.player_img = self.game.walkright[self.frame]
-                    self.frame += 1
-               except IndexError:
-                    self.frame = 0
-            self.swing = False
-        elif keys[pg.K_UP] or keys[pg.K_w]:
-            self.game.walk_sound.play(-1)
-            now = pg.time.get_ticks()
-            self.vy = -200
-            self.direction = 'up'
-            if now - self.last_update > self.frame_rate:
-               self.last_update = now
-               try:
-                    self.game.player_img = self.game.walkup[self.frame]
-                    self.frame += 1
-               except IndexError:
-                    self.frame = 0
-            self.swing = False
-        elif keys[pg.K_DOWN] or keys[pg.K_s]:
-            
-            self.game.walk_sound.play(-1)
-            now = pg.time.get_ticks()
-            self.direction = 'down'
-            self.vy = 200
-            if now - self.last_update > self.frame_rate:
-               self.last_update = now
-               try:
-                    self.game.player_img = self.game.walkdown[self.frame]
-                    self.frame += 1
-               except IndexError:
-                    self.frame = 0
-            self.swing = False
-        elif keys[pg.K_SPACE]:
-            self.attck = True
-            if self.direction == 'down':
-                self.playersword = Sword(self.game, self.rect.centerx-7, self.rect.bottom, self, -90)
-        elif self.vx != 0 and self.vy != 0:
-            self.vx *= 0.7071
-            self.vy *= 0.7071
-            self.swing = False
-        elif keys[pg.K_t]:
-            self.x = 1 * TILESIZE
-            self.y = 1 * TILESIZE
-            self.swing = False
-        elif self.attack and not keys[pg.K_SPACE]:
-             self.playersword.kill()
-             self.attack = False
-        else:
-            self.game.walk_sound.stop()
-            if self.direction == 'down':
-                self.game.player_img = self.game.walkdown[1]
-            if self.direction == 'up':
-                self.game.player_img = self.game.walkup[1]
-            if self.direction == 'right':
-                self.game.player_img = self.game.walkright[1]
-            if self.direction == 'left':
-                self.game.player_img = self.game.walkleft[1]
-            self.centerrect = self.rect.right
-            self.swing = False
+        if self.game.attack == False:
+            keys = pg.key.get_pressed()
+            if keys[pg.K_LEFT] or keys[pg.K_a]:
+                self.game.walk_sound.play(-1)
+                now = pg.time.get_ticks()
+                self.vx = -200
+                self.direction = 'left'
+                if now - self.last_update > self.frame_rate:
+                    self.last_update = now
+                    try:
+                            self.game.player_img = self.game.walkleft[self.frame]
+                            self.frame += 1
+                    except IndexError:
+                            self.frame = 0
+                    self.swing = False
+            elif keys[pg.K_RIGHT] or keys[pg.K_d]:
+                self.game.walk_sound.play(-1)
+                now = pg.time.get_ticks()
+                self.vx = 200
+                self.direction = 'right'
+                if now - self.last_update > self.frame_rate:
+                    self.last_update = now
+                    try:
+                            self.game.player_img = self.game.walkright[self.frame]
+                            self.frame += 1
+                    except IndexError:
+                            self.frame = 0
+                    self.swing = False
+            elif keys[pg.K_UP] or keys[pg.K_w]:
+                self.game.walk_sound.play(-1)
+                now = pg.time.get_ticks()
+                self.vy = -200
+                self.direction = 'up'
+                if now - self.last_update > self.frame_rate:
+                    self.last_update = now
+                    try:
+                            self.game.player_img = self.game.walkup[self.frame]
+                            self.frame += 1
+                    except IndexError:
+                            self.frame = 0
+                    self.swing = False
+            elif keys[pg.K_DOWN] or keys[pg.K_s]:
+                
+                self.game.walk_sound.play(-1)
+                now = pg.time.get_ticks()
+                self.direction = 'down'
+                self.vy = 200
+                if now - self.last_update > self.frame_rate:
+                    self.last_update = now
+                    try:
+                            self.game.player_img = self.game.walkdown[self.frame]
+                            self.frame += 1
+                    except IndexError:
+                            self.frame = 0
+                    self.swing = False
+            elif self.vx != 0 and self.vy != 0:
+                self.vx *= 0.7071
+                self.vy *= 0.7071
+                self.swing = False
+            elif keys[pg.K_t]:
+                self.x = 1 * TILESIZE
+                self.y = 1 * TILESIZE
+                self.swing = False
+            elif self.attack and not keys[pg.K_SPACE]:
+                self.playersword.kill()
+                self.attack = False
+            else:
+                self.game.walk_sound.stop()
+                if self.direction == 'down':
+                    self.game.player_img = self.game.walkdown[1]
+                if self.direction == 'up':
+                    self.game.player_img = self.game.walkup[1]
+                if self.direction == 'right':
+                    self.game.player_img = self.game.walkright[1]
+                if self.direction == 'left':
+                    self.game.player_img = self.game.walkleft[1]
+                self.centerrect = self.rect.right
+                self.swing = False
 
     def collide_with_walls(self, dir):
         if dir == 'x':
@@ -157,9 +154,6 @@ class Player(pg.sprite.Sprite):
         self.collide_with_walls('x')
         self.rect.y = self.y
         self.collide_with_walls('y')
-        self.rect = self.image.get_rect()
-        self.rect.x = self.x
-        self.rect.y = self.y
 
 
 class MapTile(pg.sprite.Sprite):
@@ -177,7 +171,7 @@ class MapTile(pg.sprite.Sprite):
         self.rect.y = y * TILESIZE
         
 class Sword(pg.sprite.Sprite):
-    def __init__(self, game, x, y, entity):
+    def __init__(self, game, x, y, entity, rot):
         self.groups = game.all_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
@@ -189,16 +183,13 @@ class Sword(pg.sprite.Sprite):
         self.rect.x = x 
         self.rect.y = y 
         self.image = pg.transform.rotate(self.image, rot)
-            
-        def update(self):
-            kill()
         
 class Obstacle(pg.sprite.Sprite):
     def __init__(self, game, x, y, w, h):
-        self.x = x*2.5
-        self.y = y*2.5
-        self.w = w*2.5
-        self.h = h*2.5
+        self.x = x*(TILESIZE/TILEPIXEL)
+        self.y = y*(TILESIZE/TILEPIXEL)
+        self.w = w*(TILESIZE/TILEPIXEL)
+        self.h = h*(TILESIZE/TILEPIXEL)
         self.groups = game.walls
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
