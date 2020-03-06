@@ -38,6 +38,8 @@ class Player(pg.sprite.Sprite):
         self.frame = 0
         self.frame_rate = ANIMATIONSPEED
         self.direction = 'down'
+        self.swing = False
+        self.centerrect = 0
 
     def get_keys(self):
         self.vx, self.vy = 0, 0
@@ -54,6 +56,7 @@ class Player(pg.sprite.Sprite):
                     self.frame += 1
                except IndexError:
                     self.frame = 0
+            self.swing = False
         elif keys[pg.K_RIGHT] or keys[pg.K_d]:
             self.game.walk_sound.play(-1)
             now = pg.time.get_ticks()
@@ -66,6 +69,7 @@ class Player(pg.sprite.Sprite):
                     self.frame += 1
                except IndexError:
                     self.frame = 0
+            self.swing = False
         elif keys[pg.K_UP] or keys[pg.K_w]:
             self.game.walk_sound.play(-1)
             now = pg.time.get_ticks()
@@ -78,6 +82,7 @@ class Player(pg.sprite.Sprite):
                     self.frame += 1
                except IndexError:
                     self.frame = 0
+            self.swing = False
         elif keys[pg.K_DOWN] or keys[pg.K_s]:
             
             self.game.walk_sound.play(-1)
@@ -91,7 +96,9 @@ class Player(pg.sprite.Sprite):
                     self.frame += 1
                except IndexError:
                     self.frame = 0
+            self.swing = False
         elif keys[pg.K_SPACE]:
+            self.swing = True
             now = pg.time.get_ticks()
             try:
                 if now - self.last_update > self.frame_rate:
@@ -116,9 +123,11 @@ class Player(pg.sprite.Sprite):
         elif self.vx != 0 and self.vy != 0:
             self.vx *= 0.7071
             self.vy *= 0.7071
+            self.swing = False
         elif keys[pg.K_t]:
             self.x = 1 * TILESIZE
             self.y = 1 * TILESIZE
+            self.swing = False
         else:
             self.game.walk_sound.stop()
             if self.direction == 'down':
@@ -129,6 +138,8 @@ class Player(pg.sprite.Sprite):
                 self.game.player_img = self.game.walkright[1]
             if self.direction == 'left':
                 self.game.player_img = self.game.walkleft[1]
+            self.centerrect = self.rect.right
+            self.swing = False
 
     def collide_with_walls(self, dir):
         if dir == 'x':
@@ -160,6 +171,12 @@ class Player(pg.sprite.Sprite):
         self.collide_with_walls('x')
         self.rect.y = self.y
         self.collide_with_walls('y')
+        self.rect = self.image.get_rect()
+        self.rect.x = self.x
+        self.rect.y = self.y
+        if self.swing:
+            if self.direction == 'left':
+                self.rect.right = self.centerrect
 
 
 class MapTile(pg.sprite.Sprite):

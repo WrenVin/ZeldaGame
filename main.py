@@ -128,7 +128,9 @@ class Game:
         #self.screen.fill(BGCOLOR)
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
+        pg.draw.rect(self.screen, BLACK, (self.player.rect.x, self.player.rect.y, self.player.rect.width, self.player.rect.height), 3)
         pg.display.update()
+        print(self.player.rect.right, self.player.centerrect)
 
     def events(self):
         # catch all events here
