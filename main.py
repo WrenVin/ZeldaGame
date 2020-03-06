@@ -1,24 +1,21 @@
 import pygame as pg
-import sys
 from os import path
 from settings import *
 from sprites import *
 from tilemap import *
 from pytmx import TiledObjectGroup
 from platform import system
-
+from sys import exit
 
 class Game:
     def __init__(self):
         pg.init()
-        self.screen = pg.display.set_mode((WIDTH, HEIGHT), pg.RESIZABLE)
+        self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         pg.display.set_caption(TITLE)
         self.clock = pg.time.Clock()
-        #pg.key.set_repeat(1, 20)
         self.font_name = pg.font.match_font(FONT_NAME)
         self.gamemap = 'img/FirstMap.tmx'
         self.attack = False
-        #self.load_data()
         
 
 
@@ -39,12 +36,9 @@ class Game:
         self.worldspritesheet = SpriteSheet(path.join(img_folder, SPRITESHEETWORLD))
         self.swordspritesheet = SpriteSheet(path.join(img_folder, 'sword.png'))
         self.player_img = self.playerspritesheet.get_image(*PLAYER_IMG_NORMAL).convert()
-        #self.wall_img = self.map.get_tile_image(0, 5, 0)
-        #self.grass = self.map.get_tile_image(0, 0, 0)
         self.woodensword = self.swordspritesheet.get_image(*WOODEN_SWORD).convert()
         self.metalsword = self.swordspritesheet.get_image(*METAL_SWORD).convert()
         self.epicsword = self.swordspritesheet.get_image(*EPIC_SWORD).convert()
-        self.sword = self.woodensword
         self.walkdown1 = self.playerspritesheet.get_image(*WALKDOWN1).convert()
         self.walkdown2 = self.playerspritesheet.get_image(*WALKDOWN2).convert()
         self.walkdown3 = self.playerspritesheet.get_image(*WALKDOWN3).convert()
@@ -65,30 +59,13 @@ class Game:
         self.walkup3 = self.playerspritesheet.get_image(*WALKUP3).convert()
         self.walkup4 = self.playerspritesheet.get_image(*WALKUP4).convert()
         self.walkup = [self.walkup1, self.walkup2, self.walkup3, self.walkup4]
-        self.attackdown1 = self.playerspritesheet.get_image(*ATTACKDOWN1).convert()
-        self.attackdown2 = self.playerspritesheet.get_image(*ATTACKDOWN2).convert()
-        self.attackdown3 = self.playerspritesheet.get_image(*ATTACKDOWN3).convert()
         self.attackdown4 = self.playerspritesheet.get_image(*ATTACKDOWN4).convert()
-        self.playerattackdown = [self.attackdown1, self.attackdown2, self.attackdown3, self.attackdown4, self.walkdown1]
-        self.attackup1 = self.playerspritesheet.get_image(*ATTACKUP1).convert()
-        self.attackup2 = self.playerspritesheet.get_image(*ATTACKUP2).convert()
-        self.attackup3 = self.playerspritesheet.get_image(*ATTACKUP3).convert()
-        self.attackup4 = self.playerspritesheet.get_image(*ATTACKUP4).convert()
-        self.playerattackup = [self.attackup1, self.attackup2, self.attackup3, self.attackup4, self.walkup1]
-        self.attackleft1 = self.playerspritesheet.get_image(*ATTACKLEFT1).convert()
         self.attackleft2 = self.playerspritesheet.get_image(*ATTACKLEFT2).convert()
-        self.attackleft3 = self.playerspritesheet.get_image(*ATTACKLEFT3).convert()
-        self.attackleft4 = self.playerspritesheet.get_image(*ATTACKLEFT4).convert()
-        self.playerattackleft = [self.attackleft1, self.attackleft2, self.attackleft3, self.attackleft4, self.walkleft1]
-        self.attackright1 = self.playerspritesheet.get_image(*ATTACKRIGHT1).convert()
         self.attackright2 = self.playerspritesheet.get_image(*ATTACKRIGHT2).convert()
-        self.attackright3 = self.playerspritesheet.get_image(*ATTACKRIGHT3).convert()
-        self.attackright4 = self.playerspritesheet.get_image(*ATTACKRIGHT4).convert()
-        self.playerattackright = [self.attackright1, self.attackright2, self.attackright3, self.attackright4, self.walkright1]
         
     def new(self):
         self.load_data()
-        # initialize all variables and do all the setup for a new game
+        self.sword = self.woodensword
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
         self.ground = pg.sprite.Group()
@@ -101,17 +78,14 @@ class Game:
                 for i in range(self.map.txmdata.height):
                     for b in range(self.map.txmdata.width):
                         if self.map.txmdata.get_tile_image(b, i, layer_index):
-                            #print(self.map.txmdata.get_tile_image(b, i, x),b, i, x)
                             MapTile(self, b, i, self.map.txmdata.get_tile_image(b, i,layer_index))
             layer_index += 1
-
             if isinstance(layer, TiledObjectGroup):
                 for obj in layer:
                     Obstacle(self, obj.x, obj.y, obj.width, obj.height)
-        #self.player = Player(self, 8, 8)
         self.camera = Camera(self.map.width, self.map.height)
+        
     def run(self):
-        # game loop - set self.playing = False to end the game
         self.playing = True
         while self.playing:
             self.dt = self.clock.tick(FPS) / 1000
@@ -121,13 +95,12 @@ class Game:
 
     def quit(self):
         pg.quit()
-        sys.exit()
+        exit()
 
     def update(self):
-        # update portion of the game loop
-        self.screen.fill(BLACK)
         self.player.update()
         self.camera.update(self.player)
+        print(self.clock.get_fps())
 
     def draw(self):
         for sprite in self.all_sprites:
@@ -135,7 +108,6 @@ class Game:
         pg.display.update()
 
     def events(self):
-        # catch all events here
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.quit()
@@ -167,11 +139,6 @@ class Game:
                 if event.key == pg.K_SPACE:
                     self.playersword.kill()
                     self.attack = False
-            if event.type == pg.VIDEORESIZE:
-                self.screen = pg.display.set_mode((event.w, event.h), pg.RESIZABLE)
-                
-       # if len(self.swords) == 0:
-          #  self.playing = False
         
     def draw_text(self, text, size, color, x, y):
         font = pg.font.Font(self.font_name, size)
@@ -227,4 +194,3 @@ g.show_start_screen()
 while True:
     g.new()
     g.run()
-    #g.show_go_screen()
