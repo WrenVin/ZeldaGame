@@ -177,7 +177,7 @@ class Sword(pg.sprite.Sprite):
         self.game = game
         self.image = self.game.sword
         self.image.set_colorkey(WHITE)
-        self.rect = self.image.get_rect()
+        self.rect = pg.Rect(x, y, 16, 7)
         self.x = x
         self.y = y
         self.rect.x = x 

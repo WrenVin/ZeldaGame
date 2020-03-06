@@ -41,7 +41,10 @@ class Game:
         self.player_img = self.playerspritesheet.get_image(*PLAYER_IMG_NORMAL).convert()
         #self.wall_img = self.map.get_tile_image(0, 5, 0)
         #self.grass = self.map.get_tile_image(0, 0, 0)
-        self.sword = self.swordspritesheet.get_image(*WOODEN_SWORD).convert()
+        self.woodensword = self.swordspritesheet.get_image(*WOODEN_SWORD).convert()
+        self.metalsword = self.swordspritesheet.get_image(*METAL_SWORD).convert()
+        self.epicsword = self.swordspritesheet.get_image(*EPIC_SWORD).convert()
+        self.sword = self.woodensword
         self.walkdown1 = self.playerspritesheet.get_image(*WALKDOWN1).convert()
         self.walkdown2 = self.playerspritesheet.get_image(*WALKDOWN2).convert()
         self.walkdown3 = self.playerspritesheet.get_image(*WALKDOWN3).convert()
@@ -151,9 +154,15 @@ class Game:
                     if self.player.direction == 'right':
                         self.playersword = Sword(self, self.player.rect.right-6, self.player.rect.centery-2, self.player, -0)
                         self.player_img = self.attackright2
-                    if  pg.sprite.spritecollide(self.playersword, self.walls, True):
+                    if  pg.sprite.spritecollide(self.playersword, self.walls, False):
                         self.playersword.kill()
                         self.attack = False
+                if event.key == pg.K_5:
+                    self.sword = self.metalsword
+                if event.key == pg.K_4:
+                    self.sword = self.woodensword
+                if event.key == pg.K_6:
+                    self.sword = self.epicsword
             if event.type == pg.KEYUP and self.attack:
                 if event.key == pg.K_SPACE:
                     self.playersword.kill()
