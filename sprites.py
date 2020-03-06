@@ -112,13 +112,13 @@ class Player(pg.sprite.Sprite):
             else:
                 self.game.walk_sound.stop()
                 if self.direction == 'down':
-                    self.game.player_img = self.game.walkdown[1]
+                    self.game.player_img = self.game.walkdown1
                 if self.direction == 'up':
-                    self.game.player_img = self.game.walkup[1]
+                    self.game.player_img = self.game.walkup3
                 if self.direction == 'right':
-                    self.game.player_img = self.game.walkright[1]
+                    self.game.player_img = self.game.walkright1
                 if self.direction == 'left':
-                    self.game.player_img = self.game.walkleft[1]
+                    self.game.player_img = self.game.walkleft1
                 self.centerrect = self.rect.right
                 self.swing = False
 

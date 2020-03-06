@@ -146,9 +146,14 @@ class Game:
                         self.playersword = Sword(self, self.player.rect.x-27, self.player.rect.y+20, self.player, -180)
                         self.player_img = self.attackleft2
                     if self.player.direction == 'up':
-                        self.playersword = Sword(self, self.player.rect.centerx-7, self.player.rect.bottom, self.player, -270)
+                        self.playersword = Sword(self, self.player.rect.centerx-9, self.player.rect.top-26, self.player, -270)
+                        self.player_img = self.walkup2 
                     if self.player.direction == 'right':
-                        self.playersword = Sword(self, self.player.rect.centerx-7, self.player.rect.bottom, self.player, -0)
+                        self.playersword = Sword(self, self.player.rect.right-6, self.player.rect.centery-2, self.player, -0)
+                        self.player_img = self.attackright2
+                    if  pg.sprite.spritecollide(self.playersword, self.walls, True):
+                        self.playersword.kill()
+                        self.attack = False
             if event.type == pg.KEYUP and self.attack:
                 if event.key == pg.K_SPACE:
                     self.playersword.kill()
