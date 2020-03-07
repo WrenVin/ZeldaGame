@@ -6,16 +6,19 @@ from tilemap import *
 from pytmx import TiledObjectGroup
 from platform import system
 from sys import exit
+from pygame.locals import *
 
 class Game:
     def __init__(self):
         pg.init()
-        self.screen = pg.display.set_mode((WIDTH, HEIGHT))
+        flags = FULLSCREEN | DOUBLEBUF
+        self.screen = pg.display.set_mode((WIDTH, HEIGHT), flags)
         pg.display.set_caption(TITLE)
         self.clock = pg.time.Clock()
         self.font_name = pg.font.match_font(FONT_NAME)
         self.gamemap = 'img/FirstMap.tmx'
         self.attack = False
+        pg.mouse.set_visible(False)
         
 
 
@@ -66,6 +69,7 @@ class Game:
     def new(self):
         self.load_data()
         self.sword = self.woodensword
+        self.cursor = pg.transform.rotate(self.sword, 135)
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
         self.ground = pg.sprite.Group()
@@ -105,6 +109,7 @@ class Game:
     def draw(self):
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
+        self.screen.blit(self.cursor, pg.mouse.get_pos())
         pg.display.update()
 
     def events(self):
